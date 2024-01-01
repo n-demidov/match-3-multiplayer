@@ -8,8 +8,8 @@ import java.util.List;
 public class CapturableCellsFinder extends AbstractGameRules {
 
   public List<Cell> findCapturableCells(GameAction gameAction) {
-    int x = gameAction.getX();
-    int y = gameAction.getY();
+    int x = gameAction.getPoint1().getX();
+    int y = gameAction.getPoint1().getY();
     Cell[][] cells = gameAction.getGame().getBoard().getCells();
     int initType = cells[x][y].getType();
 

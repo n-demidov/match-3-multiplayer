@@ -44,7 +44,7 @@ public class GameActionHandler implements OperationHandler {
 
     GameRequestOperation gameRequestOperation = new GameRequestOperation(operation, currentGame.get());
 
-    gameActionValidator.valid(gameRequestOperation, currentGame.get());
+//    gameActionValidator.valid(gameRequestOperation, currentGame.get());
     GameAction gameAction = conversionService.convert(gameRequestOperation, GameAction.class);
 
     userGames.processGameAction(gameAction);

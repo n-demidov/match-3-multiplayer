@@ -39,6 +39,8 @@ var CAPTURING_CELL_ANIMATION_MAX = 0.6;
 
 var CHANCE_TO_SHOW_ADDS_PERCENT = 100;
 
+var point1, point2;
+
 var fontsByLocale = {
   "en": '"Showcard Gothic"',
   "ru": '"Showcard gothic cyrillic"'
@@ -187,6 +189,7 @@ function processGameChangedOperation(newGame) {
 
   newGame.incomingTime = Date.now();
 
+  resetMove();
   fillBoardWithCoords();
   game.board.cells = reverseBoard();
   resetPossibleCellsAnimation();
@@ -288,33 +291,64 @@ function gameBoardClicked(x, y) {
   var xCellIndex = Math.floor(x / cellSize);
   var yCellIndex = Math.floor(y / cellSize);
 
-  var cells = game.board.cells;
-  var targetMoveCell = cells[xCellIndex][yCellIndex];
-  var opponentCellType = findOpponentCellType(userInfo.id, game);
-  var validMoveCells = findValidMoveCells(userInfo.id, game);
-
-  if (isMoveValid(xCellIndex, yCellIndex, validMoveCells)) {
-    if (game.reversedBoard) {
-      xCellIndex = game.board.cells.length - xCellIndex - 1;
-      yCellIndex = game.board.cells[xCellIndex].length - yCellIndex - 1;
-    }
-
-    var movePayload = {
-      type: MOVE_GAME_ACTION,
-      x: xCellIndex,
-      y: yCellIndex
-    };
-
-    sendGameAction(movePayload);
-  } else if (opponentCellType === targetMoveCell.type
-    && isCellNeighbor(targetMoveCell, userInfo.id, cells)) {
-    var opponentId = findOpponentId();
-    animation.busyCells = findPlayerCells(opponentId, game);
-    animation.busyCells.push(targetMoveCell);
-    animation.busyCellsStart = Date.now();
-  } else {
-    startHelpAnimation();
+  if (point1 === undefined) {
+    point1 = {};
+    point1.x = xCellIndex;
+    point1.y = yCellIndex;
+    return;
+  } else if (point2 === undefined) {
+    point2 = {};
+    point2.x = xCellIndex;
+    point2.y = yCellIndex;
   }
+
+  if (!areCellsNeighbors(point1, point2)) {
+    resetMove();
+    return;
+  }
+
+  if (game.reversedBoard) {
+    point1.x = reverseX(point1.x);
+    point1.y = reverseY(point1.x, point1.y);
+    point2.x = reverseX(point2.x);
+    point2.y = reverseY(point2.x, point2.y);
+
+    // xCellIndex = game.board.cells.length - xCellIndex - 1;
+    // yCellIndex = game.board.cells[xCellIndex].length - yCellIndex - 1;
+  }
+
+  var movePayload = {
+    type: MOVE_GAME_ACTION,
+    point1: point1,
+    point2: point2
+  };
+  sendGameAction(movePayload);
+
+
+  // if (isMoveValid(xCellIndex, yCellIndex, validMoveCells)) {
+  //
+  // } else if (opponentCellType === targetMoveCell.type
+  //   && isCellNeighbor(targetMoveCell, userInfo.id, cells)) {
+  //   var opponentId = findOpponentId();
+  //   animation.busyCells = findPlayerCells(opponentId, game);
+  //   animation.busyCells.push(targetMoveCell);
+  //   animation.busyCellsStart = Date.now();
+  // } else {
+  //   startHelpAnimation();
+  // }
+}
+
+function reverseX(xCellIndex) {
+  return game.board.cells.length - xCellIndex - 1;
+}
+
+function reverseY(xCellIndex, yCellIndex) {
+  return game.board.cells[xCellIndex].length - yCellIndex - 1;
+}
+
+function resetMove() {
+  point1 = undefined;
+  point2 = undefined;
 }
 
 function startHelpAnimation() {
@@ -566,17 +600,34 @@ function paintBoard(game) {
 
       drawFruit(cell);
 
-      if (cell.owner) {
-        if (cell.owner === game.players[0].id) {
-          ctx.fillStyle = FIRST_PLAYER_CELLS_COLOR;
-        } else {
-          ctx.fillStyle = SECOND_PLAYER_CELLS_COLOR;
-        }
+      // paint selected cells
+      if (point1 !== undefined && cell.x === point1.x && cell.y === point1.y) {
+        ctx.fillStyle = FIRST_PLAYER_CELLS_COLOR;
 
         ctx.globalAlpha = CAPTURED_OPACITY_CELL;
         ctx.fillRect(x * cellSize, y * cellSize + BOARD_Y, cellSize, cellSize);
         ctx.globalAlpha = 1;
       }
+
+      if (point2 !== undefined && cell.x === point2.x && cell.y === point2.y) {
+        ctx.fillStyle = SECOND_PLAYER_CELLS_COLOR;
+
+        ctx.globalAlpha = CAPTURED_OPACITY_CELL;
+        ctx.fillRect(x * cellSize, y * cellSize + BOARD_Y, cellSize, cellSize);
+        ctx.globalAlpha = 1;
+      }
+
+      // if (cell.owner) {
+      //   if (cell.owner === game.players[0].id) {
+      //     ctx.fillStyle = FIRST_PLAYER_CELLS_COLOR;
+      //   } else {
+      //     ctx.fillStyle = SECOND_PLAYER_CELLS_COLOR;
+      //   }
+      //
+      //   ctx.globalAlpha = CAPTURED_OPACITY_CELL;
+      //   ctx.fillRect(x * cellSize, y * cellSize + BOARD_Y, cellSize, cellSize);
+      //   ctx.globalAlpha = 1;
+      // }
     }
   }
 }
@@ -950,6 +1001,14 @@ function findValidMoveCells(playerId, game) {
   }
 
   return result;
+}
+
+function areCellsNeighbors(point1, point2) {
+  if (Math.abs(point1.x - point2.x) + Math.abs(point1.y - point2.y) !== 1) {
+    return false;
+  }
+
+  return true;
 }
 
 function findOpponentCellType(playerId, game) {

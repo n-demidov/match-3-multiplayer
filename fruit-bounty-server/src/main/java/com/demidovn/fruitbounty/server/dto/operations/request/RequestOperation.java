@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class RequestOperation {
 
   private OperationType type;
-  private LinkedHashMap<String, String> data;
+  private LinkedHashMap<String, Object> data;
   private Connection connection;
 
 }

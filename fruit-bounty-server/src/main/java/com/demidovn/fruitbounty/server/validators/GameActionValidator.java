@@ -33,7 +33,7 @@ public class GameActionValidator {
   }
 
   private void validGameActionType(RequestOperation operation) {
-    String gameActionType = operation.getData().get(AppConstants.GAME_ACTION_TYPE);
+    String gameActionType = (String) operation.getData().get(AppConstants.GAME_ACTION_TYPE);
 
     boolean isContains = GameActionType.contains(gameActionType);
 
@@ -44,12 +44,12 @@ public class GameActionValidator {
   }
 
   private void validCoordinates(RequestOperation operation, Game game) {
-    String gameActionTypeString = operation.getData().get(AppConstants.GAME_ACTION_TYPE);
+    String gameActionTypeString = (String) operation.getData().get(AppConstants.GAME_ACTION_TYPE);
     GameActionType gameActionType = GameActionType.valueOf(gameActionTypeString);
 
     if (gameActionType == GameActionType.Move) {
-      String x = operation.getData().get(AppConstants.GAME_ACTION_MOVE_X_COORDINATE);
-      String y = operation.getData().get(AppConstants.GAME_ACTION_MOVE_Y_COORDINATE);
+      String x = (String) operation.getData().get(AppConstants.GAME_ACTION_MOVE_X_COORDINATE);
+      String y = (String) operation.getData().get(AppConstants.GAME_ACTION_MOVE_Y_COORDINATE);
 
       if (!isCoordinateValid(x, game.getBoard().getCells().length - 1)
         || !isCoordinateValid(y, game.getBoard().getCells()[0].length - 1)) {

@@ -12,14 +12,15 @@ public class GameAction {
   private long actionedPlayerId;
 
   private GameActionType type;
-  private int x, y;
+  private Point point1;
+  private Point point2;
 
-  public GameAction(Game game, long actionedPlayerId, GameActionType type, int x, int y) {
+  public GameAction(Game game, long actionedPlayerId, GameActionType type, Point point1, Point point2) {
     this.game = game;
     this.actionedPlayerId = actionedPlayerId;
     this.type = type;
-    this.x = x;
-    this.y = y;
+    this.point1 = point1;
+    this.point2 = point2;
   }
 
   public Player findActionedPlayer() {
@@ -33,7 +34,8 @@ public class GameAction {
   }
 
   public Cell getTargetCell() {
-    return game.getBoard().getCells()[x][y];
+//    return game.getBoard().getCells()[x][y]; // todo
+    return game.getBoard().getCells()[point1.getX()][point1.getY()];
   }
 
   public Cell findCell(int x, int y) {

@@ -11,6 +11,7 @@ import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import com.demidovn.fruitbounty.gameapi.model.GameActionType;
 import com.demidovn.fruitbounty.gameapi.model.Player;
+import com.demidovn.fruitbounty.gameapi.model.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +42,9 @@ public class DeepSearchMoveFinder {
     for (Cell cell : allPossibleMoves) {  // O(k)
       Game newGame = Game.copy(game);  // O(n)
 
+      //todo:
       GameAction gameAction = new GameAction(newGame, movingPlayer.getId(),
-          GameActionType.Move, cell.getX(), cell.getY());
+          GameActionType.Move, new Point(cell.getX(), cell.getY()), new Point(cell.getX(), cell.getY()));
       gameLoop.processGameAction(gameAction, new GameProcessingContext(true));  // O(n * several times)
 
       if (!newGame.isFinished() && deep < MAX_DEEP_LIMIT) {
@@ -80,8 +82,8 @@ public class DeepSearchMoveFinder {
             game,
             actionedPlayerId,
             GameActionType.Move,
-            x,
-            y);
+            new Point(x, y),
+            new Point(x, y));
         if (gameRules.isMoveValid(gameAction)) {
           Cell cell = cells[x][y];
           result.put(cell.getType(), cell);

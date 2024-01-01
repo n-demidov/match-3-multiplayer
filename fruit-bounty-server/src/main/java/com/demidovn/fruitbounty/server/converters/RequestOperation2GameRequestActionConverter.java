@@ -12,7 +12,7 @@ public class RequestOperation2GameRequestActionConverter
 
   @Override
   public Boolean convert(RequestOperation requestOperation) {
-    String ack = requestOperation.getData().get(GAME_REQUEST_ACTION_TYPE);
+    String ack = (String) requestOperation.getData().get(GAME_REQUEST_ACTION_TYPE);
     return Objects.equals(ack, SUBMIT_GAME_REQUEST_VALUE);
   }
 

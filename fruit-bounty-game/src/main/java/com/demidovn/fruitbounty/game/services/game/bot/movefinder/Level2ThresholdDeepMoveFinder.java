@@ -16,6 +16,7 @@ import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import com.demidovn.fruitbounty.gameapi.model.GameActionType;
 import com.demidovn.fruitbounty.gameapi.model.Player;
+import com.demidovn.fruitbounty.gameapi.model.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +74,7 @@ public class Level2ThresholdDeepMoveFinder {
       Game newGame = Game.copy(game);  // O(n)
 
       GameAction gameAction = new GameAction(newGame, movingPlayer.getId(),
-          GameActionType.Move, cell.getX(), cell.getY());
+          GameActionType.Move, new Point(cell.getX(), cell.getY()), new Point(cell.getX(), cell.getY()));
       GameProcessingContext gameContext = timeToSecondAlgo
           ? new GameProcessingContext(true) : new GameProcessingContext();
       gameLoop.processGameAction(gameAction, gameContext);  // O(n * several times)
@@ -122,8 +123,8 @@ public class Level2ThresholdDeepMoveFinder {
             game,
             actionedPlayerId,
             GameActionType.Move,
-            x,
-            y);
+            new Point(x, y),
+            new Point(x, y));
         if (gameRules.isMoveValid(gameAction)) {
           Cell cell = cells[x][y];
           result.put(cell.getType(), cell);

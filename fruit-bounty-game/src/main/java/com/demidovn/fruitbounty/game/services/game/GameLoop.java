@@ -10,6 +10,7 @@ import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import com.demidovn.fruitbounty.gameapi.model.GameActionType;
 import com.demidovn.fruitbounty.gameapi.model.Player;
+import com.demidovn.fruitbounty.gameapi.model.Point;
 import com.demidovn.fruitbounty.gameapi.services.BotService;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -102,9 +103,9 @@ public class GameLoop {
     if (gameRules.isMoveValid(gameAction)) {
       gameAction.getGame().getCurrentPlayer().resetConsecutivelyMissedMoves();
 
-      List<Cell> capturableCells = gameRules.findCapturableCells(gameAction);
+//      List<Cell> capturableCells = gameRules.findCapturableCells(gameAction);
 
-      gameRules.captureCells(capturableCells, gameAction);
+//      gameRules.captureCells(capturableCells, gameAction);
       if (context.isCollapseBoard()) {
         freeCellsCollapser.collapseBoard(
             gameAction.getGame().getBoard().getCells(),
@@ -113,8 +114,20 @@ public class GameLoop {
       gameRules.checkGameEndingByMoving(gameAction.getGame());
       gameRules.switchCurrentPlayer(gameAction.getGame());
 
+      swipe(gameAction.getGame().getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
+
       context.markGameChanged();
     }
+  }
+
+  private void swipe(Cell[][] cells, Point point1, Point point2) {
+    Cell cell1 = cells[point1.getX()][point1.getY()];
+    Cell cell2 = cells[point2.getX()][point2.getY()];
+
+    int cell1Type = cell1.getType();
+
+    cell1.setType(cell2.getType());
+    cell2.setType(cell1Type);
   }
 
   private void processSurrenderAction(GameAction gameAction, GameProcessingContext context) {

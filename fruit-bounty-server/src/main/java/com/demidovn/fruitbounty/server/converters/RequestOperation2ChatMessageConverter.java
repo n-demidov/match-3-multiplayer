@@ -10,7 +10,7 @@ public class RequestOperation2ChatMessageConverter implements FruitServerConvert
 
   @Override
   public String convert(RequestOperation requestOperation) {
-    return requestOperation.getData().get(CHAT_MESSAGE);
+    return (String) requestOperation.getData().get(CHAT_MESSAGE);
   }
 
 }
