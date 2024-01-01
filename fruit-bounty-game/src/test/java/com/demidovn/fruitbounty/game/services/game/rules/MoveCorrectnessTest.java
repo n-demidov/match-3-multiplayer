@@ -42,8 +42,8 @@ public class MoveCorrectnessTest extends AbstractGameRulesTest {
     gameAction.findCell(4, 2).setType(100);
 
     neighborCells.forEach(closeCell -> {
-      gameAction.setX(closeCell.getKey());
-      gameAction.setY(closeCell.getValue());
+//      gameAction.setX(closeCell.getKey());
+//      gameAction.setY(closeCell.getValue());
 
       boolean actual = gameRules.isMoveValid(gameAction);
 
@@ -60,8 +60,8 @@ public class MoveCorrectnessTest extends AbstractGameRulesTest {
     obliquelyCells.add(new Pair<>(OWNED_CELL_X + 1, OWNED_CELL_Y + 1));
 
     obliquelyCells.forEach(obliquelyCell -> {
-      gameAction.setX(obliquelyCell.getKey());
-      gameAction.setY(obliquelyCell.getValue());
+//      gameAction.setX(obliquelyCell.getKey());
+//      gameAction.setY(obliquelyCell.getValue());
 
       boolean actual = gameRules.isMoveValid(gameAction);
 
@@ -71,8 +71,8 @@ public class MoveCorrectnessTest extends AbstractGameRulesTest {
 
   @Test
   public void rejectIfNoNeighborOwnedCell() {
-    gameAction.setX(0);
-    gameAction.setY(0);
+//    gameAction.setX(0);
+//    gameAction.setY(0);
 
     boolean actual = gameRules.isMoveValid(gameAction);
 
@@ -81,8 +81,8 @@ public class MoveCorrectnessTest extends AbstractGameRulesTest {
 
   @Test
   public void rejectIfAlreadyOccupied() {
-    gameAction.setX(2);
-    gameAction.setY(1);
+//    gameAction.setX(2);
+//    gameAction.setY(1);
 
     boolean actual = gameRules.isMoveValid(gameAction);
 
@@ -103,8 +103,8 @@ public class MoveCorrectnessTest extends AbstractGameRulesTest {
 
   @Test
   public void rejectIfPlayerNotCurrent() {
-    gameAction.setX(capturingNeighborCell.getKey());
-    gameAction.setY(capturingNeighborCell.getValue());
+//    gameAction.setX(capturingNeighborCell.getKey());
+//    gameAction.setY(capturingNeighborCell.getValue());
 
     gameAction.getGame().setCurrentPlayer(getOtherPlayer());
 
@@ -120,8 +120,8 @@ public class MoveCorrectnessTest extends AbstractGameRulesTest {
 
     opponentCell.setOwner(getOtherPlayer().getId());
 
-    gameAction.setX(capturingNeighborCell.getKey());
-    gameAction.setY(capturingNeighborCell.getValue());
+//    gameAction.setX(capturingNeighborCell.getKey());
+//    gameAction.setY(capturingNeighborCell.getValue());
 
     boolean actual = gameRules.isMoveValid(gameAction);
 
@@ -150,8 +150,8 @@ public class MoveCorrectnessTest extends AbstractGameRulesTest {
   }
 
   private void setOtherPlayerCell(int otherPlayerCellX, int otherPlayerCellY) {
-    gameAction.setX(otherPlayerCellX);
-    gameAction.setY(otherPlayerCellY);
+//    gameAction.setX(otherPlayerCellX);
+//    gameAction.setY(otherPlayerCellY);
 
     Cell[][] cells = gameAction.getGame().getBoard().getCells();
     cells[otherPlayerCellX][otherPlayerCellY].setOwner(OTHER_PLAYER_ID);

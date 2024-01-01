@@ -18,8 +18,8 @@ public class CapturableCellsFinderTest extends AbstractGameRulesTest {
   public void testFindCapturedCells() {
     GameAction gameAction = new GameAction();
     gameAction.setGame(generateGame());
-    gameAction.setX(TARGET_X);
-    gameAction.setY(TARGET_Y);
+//    gameAction.setX(TARGET_X);
+//    gameAction.setY(TARGET_Y);
     gameAction.setActionedPlayerId(PLAYER_ID);
 
     List<Cell> capturedCells = gameRules.findCapturableCells(gameAction);
