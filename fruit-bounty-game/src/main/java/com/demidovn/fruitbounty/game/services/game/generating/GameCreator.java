@@ -1,6 +1,7 @@
 package com.demidovn.fruitbounty.game.services.game.generating;
 
 import com.demidovn.fruitbounty.game.GameOptions;
+import com.demidovn.fruitbounty.game.services.game.rules.MatchesFinder;
 import com.demidovn.fruitbounty.gameapi.model.Board;
 import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
@@ -8,12 +9,15 @@ import com.demidovn.fruitbounty.gameapi.model.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class GameCreator {
 
   private final Random rand = new Random();
+  private final MatchesFinder matchesFinder = new MatchesFinder();
 
   private InitPlayersCellsConfigurator initPlayersCellsConfigurator =
     new InitPlayersCellsConfigurator();
@@ -55,6 +59,20 @@ public class GameCreator {
   }
 
   private Board createBoard(Game game) {
+    int counter = 0;
+    Board board;
+
+    do {
+      board = createBoardInner(game);
+      if (++counter >= 1_000) {
+        log.error("Too many tries to create board, counter={}", counter);
+      }
+    } while (matchesFinder.findMatches(board.getCells()).size() > 0);
+
+    return board;
+  }
+
+  private Board createBoardInner(Game game) {
     int boardWidth = getBoardWidth(game);
     int boardHeight = getBoardHeight(game);
     Cell[][] cells = new Cell[boardWidth][boardHeight];

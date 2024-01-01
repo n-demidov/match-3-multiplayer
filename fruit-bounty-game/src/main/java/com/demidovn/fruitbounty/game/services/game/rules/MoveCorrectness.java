@@ -1,6 +1,7 @@
 package com.demidovn.fruitbounty.game.services.game.rules;
 
 import com.demidovn.fruitbounty.game.GameOptions;
+import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import com.demidovn.fruitbounty.gameapi.model.Player;
 import com.demidovn.fruitbounty.gameapi.model.Point;
@@ -9,13 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MoveCorrectness extends AbstractGameRules {
-  private static final CellsFinder cellsFinder = new CellsFinder();
+  private static final MatchesFinder matchesFinder = new MatchesFinder();
 
   public boolean isMoveValid(GameAction gameAction) {
     return isPlayerCurrent(gameAction)
         && isActionBeforeGameExpired(gameAction)
         && areCellsNeighbors(gameAction.getPoint1(), gameAction.getPoint2())
-        && isMatch(gameAction);
+        && isMatch(gameAction.getGame().getBoard().getCells());
   }
 
   private boolean isPlayerCurrent(GameAction gameAction) {
@@ -32,19 +33,8 @@ public class MoveCorrectness extends AbstractGameRules {
     return Math.abs(point1.getX() - point2.getX()) + Math.abs(point1.getY() - point2.getY()) == 1;
   }
 
-  private boolean isMatch(GameAction gameAction) {
-    //todo
-
-    return true;
-
-//    Cell targetCell = gameAction.getTargetCell();
-//
-//    return gameAction.getGame().getPlayers()
-//      .stream()
-//      .filter(player -> player.getId() != gameAction.getActionedPlayerId())
-//      .anyMatch(player ->
-//        targetCell.getType() == cellsFinder.getOwnedCell(
-//            player.getId(), gameAction.getGame().getBoard().getCells()).getType());
+  private boolean isMatch(Cell[][] cells) {
+    return matchesFinder.findMatches(cells).size() > 0;
   }
 
 }
