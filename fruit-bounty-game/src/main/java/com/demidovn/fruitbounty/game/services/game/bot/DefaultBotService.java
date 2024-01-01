@@ -9,6 +9,7 @@ import com.demidovn.fruitbounty.game.services.game.bot.level.L1BotMover;
 import com.demidovn.fruitbounty.game.services.game.bot.level.L2BotMover;
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.Player;
+import com.demidovn.fruitbounty.gameapi.model.Point;
 import com.demidovn.fruitbounty.gameapi.services.BotService;
 import java.time.Instant;
 import java.util.HashMap;
@@ -111,7 +112,7 @@ public class DefaultBotService implements BotService {
 
     long id = currentPlayer.getId();
     BotMover botMover = botMoversById.get(id);
-    Pair<Integer, Integer> generatedMove = botMover.findMove(game);
+    Pair<Point, Point> generatedMove = botMover.findMove(game);
 
     game.getGameActions().add(
       moveActionConverter.convert2MoveAction(game, generatedMove.getKey(), generatedMove.getValue()));

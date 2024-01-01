@@ -32,15 +32,7 @@ public class Game {
   private final Queue<GameAction> gameActions = new ConcurrentLinkedQueue<>();
 
   public static Game copy(Game fromGame) {
-    Cell[][] cells = fromGame.getBoard().getCells();
-    Cell[][] copiedCells = new Cell[cells.length][cells[0].length];
-
-    for (int x = 0; x < cells.length; x++) {
-      for (int y = 0; y < cells[0].length; y++) {
-        Cell cell = cells[x][y];
-        copiedCells[x][y] = new Cell(cell.getOwner(), cell.getType(), cell.getX(), cell.getY());
-      }
-    }
+    Cell[][] copiedCells = copyCells(fromGame.getBoard().getCells());
 
     return new Game(
         new Board(copiedCells),
@@ -54,6 +46,19 @@ public class Game {
         fromGame.isFinished,
         Player.copyPlayer(fromGame.winner)
     );
+  }
+
+  public static Cell[][] copyCells(Cell[][] sourceCells) {
+    Cell[][] copiedCells = new Cell[sourceCells.length][sourceCells[0].length];
+
+    for (int x = 0; x < sourceCells.length; x++) {
+      for (int y = 0; y < sourceCells[0].length; y++) {
+        Cell cell = sourceCells[x][y];
+        copiedCells[x][y] = new Cell(cell.getOwner(), cell.getType(), cell.getX(), cell.getY());
+      }
+    }
+
+    return copiedCells;
   }
 
   public void setCurrentPlayer(Player player) {

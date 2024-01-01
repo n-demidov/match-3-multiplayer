@@ -3,6 +3,7 @@ package com.demidovn.fruitbounty.game.services.game.bot.level;
 import com.demidovn.fruitbounty.game.model.Pair;
 import com.demidovn.fruitbounty.game.services.game.bot.movefinder.Level2ThresholdDeepMoveFinder;
 import com.demidovn.fruitbounty.gameapi.model.Game;
+import com.demidovn.fruitbounty.gameapi.model.Point;
 
 public class L2BotMover implements BotMover {
   private final int maxDeepLimit;
@@ -14,8 +15,9 @@ public class L2BotMover implements BotMover {
   }
 
   @Override
-  public Pair<Integer, Integer> findMove(Game game) {
-    return l2MoveFinder.findBestMove(game.getCurrentPlayer(), game, maxDeepLimit);
+  public Pair<Point, Point> findMove(Game game) {
+    throw new UnsupportedOperationException();
+//    return l2MoveFinder.findBestMove(game.getCurrentPlayer(), game, maxDeepLimit);
   }
 
 }
