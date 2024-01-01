@@ -191,7 +191,6 @@ function processGameChangedOperation(newGame) {
 
   resetMove();
   fillBoardWithCoords();
-  game.board.cells = reverseBoard();
   resetPossibleCellsAnimation();
   prepareCapturedCellsAnimation(oldGame, newGame);
   paintGame(newGame);
@@ -307,16 +306,6 @@ function gameBoardClicked(x, y) {
     return;
   }
 
-  if (game.reversedBoard) {
-    point1.x = reverseX(point1.x);
-    point1.y = reverseY(point1.x, point1.y);
-    point2.x = reverseX(point2.x);
-    point2.y = reverseY(point2.x, point2.y);
-
-    // xCellIndex = game.board.cells.length - xCellIndex - 1;
-    // yCellIndex = game.board.cells[xCellIndex].length - yCellIndex - 1;
-  }
-
   var movePayload = {
     type: MOVE_GAME_ACTION,
     point1: point1,
@@ -336,14 +325,6 @@ function gameBoardClicked(x, y) {
   // } else {
   //   startHelpAnimation();
   // }
-}
-
-function reverseX(xCellIndex) {
-  return game.board.cells.length - xCellIndex - 1;
-}
-
-function reverseY(xCellIndex, yCellIndex) {
-  return game.board.cells[xCellIndex].length - yCellIndex - 1;
 }
 
 function resetMove() {
@@ -386,40 +367,6 @@ function fillBoardWithCoords() {
       cell.y = y;
     }
   }
-}
-
-function reverseBoard() {
-  var startedCell = getPlayerStartedCell(game, userInfo.id);
-  game.reversedBoard = startedCell.x !== 0;
-
-  if (!game.reversedBoard) {
-    return game.board.cells;
-  }
-
-  var cells = game.board.cells;
-  var reversedCells = [];
-
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-    reversedCells.push([]);
-
-    for (var y = 0; y < row.length; y++) {
-      reversedCells[x].push([]);
-    }
-  }
-
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-    for (var y = 0; y < row.length; y++) {
-      var reversedCell = row[y];
-      reversedCell.x = cells.length - reversedCell.x - 1;
-      reversedCell.y = row.length - reversedCell.y - 1;
-
-      reversedCells[reversedCell.x][reversedCell.y] = reversedCell;
-    }
-  }
-
-  return reversedCells;
 }
 
 function isMoveValid(x, y, validCells) {
