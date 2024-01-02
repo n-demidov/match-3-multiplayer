@@ -50,7 +50,7 @@ public class BoardOperations {
     return cells;
   }
 
-  public Cell[][] createBoardInner(int boardWidth, int boardHeight) {
+  private Cell[][] createBoardInner(int boardWidth, int boardHeight) {
     Cell[][] cells = new Cell[boardWidth][boardHeight];
 
     for (int x = 0; x < boardWidth; x++) {
@@ -61,7 +61,7 @@ public class BoardOperations {
     return cells;
   }
 
-  public int createRandomCellType() {
+  private int createRandomCellType() {
     return rand.nextInt(GameOptions.CELL_TYPES_COUNT) + 1;
   }
 
