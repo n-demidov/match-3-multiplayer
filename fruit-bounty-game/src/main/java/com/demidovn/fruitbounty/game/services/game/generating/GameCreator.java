@@ -1,7 +1,7 @@
 package com.demidovn.fruitbounty.game.services.game.generating;
 
 import com.demidovn.fruitbounty.game.GameOptions;
-import com.demidovn.fruitbounty.game.services.game.rules.MatchesFinder;
+import com.demidovn.fruitbounty.game.services.game.rules.BoardOperations;
 import com.demidovn.fruitbounty.gameapi.model.Board;
 import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class GameCreator {
 
   private final Random rand = new Random();
-  private final MatchesFinder matchesFinder = new MatchesFinder();
+  private final BoardOperations boardOperations = new BoardOperations();
 
   public Game createNewGame(List<Player> players, boolean isTutorial) {
     Game game = new Game();
@@ -33,10 +33,6 @@ public class GameCreator {
     changeBoardIfTutorial(game);
 
     return game;
-  }
-
-  public int createRandomCellType() {
-    return rand.nextInt(GameOptions.CELL_TYPES_COUNT) + 1;
   }
 
   private void randomlyMixPlayers(List<Player> players) {
@@ -59,31 +55,10 @@ public class GameCreator {
   }
 
   private Board createBoard(Game game) {
-    int counter = 0;
-    Board board;
-
-    do {
-      board = createBoardInner(game);
-      if (++counter >= 1_000) {
-        log.error("Too many tries to create board, counter={}", counter);
-      }
-    } while (matchesFinder.findMatches(board.getCells()).size() > 0);
-
-    return board;
-  }
-
-  private Board createBoardInner(Game game) {
     int boardWidth = getBoardWidth(game);
     int boardHeight = getBoardHeight(game);
-    Cell[][] cells = new Cell[boardWidth][boardHeight];
 
-    for (int x = 0; x < boardWidth; x++) {
-      for (int y = 0; y < boardHeight; y++) {
-        cells[x][y] = new Cell(createRandomCellType(), x, y);
-      }
-    }
-
-    return new Board(cells);
+    return new Board(boardOperations.createBoard(boardWidth, boardHeight));
   }
 
   private void changeBoardIfTutorial(Game game) {

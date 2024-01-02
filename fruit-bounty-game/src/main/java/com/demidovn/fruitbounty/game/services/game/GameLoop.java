@@ -4,7 +4,7 @@ import com.demidovn.fruitbounty.game.GameOptions;
 import com.demidovn.fruitbounty.game.model.GameProcessingContext;
 import com.demidovn.fruitbounty.game.services.DefaultGameEventsSubscriptions;
 import com.demidovn.fruitbounty.game.services.FruitBountyGameFacade;
-import com.demidovn.fruitbounty.game.services.game.generating.GameCreator;
+import com.demidovn.fruitbounty.game.services.game.rules.BoardOperations;
 import com.demidovn.fruitbounty.game.services.game.rules.CellsDropper;
 import com.demidovn.fruitbounty.game.services.game.rules.FreeCellsCollapser;
 import com.demidovn.fruitbounty.game.services.game.rules.MatchesFinder;
@@ -39,8 +39,7 @@ public class GameLoop {
   @Autowired
   private BotService botService;
 
-  @Autowired
-  private GameCreator gameCreator;
+  private BoardOperations boardOperations = new BoardOperations();
 
   private static final GameRules gameRules = new GameRules();
   private static final FreeCellsCollapser freeCellsCollapser = new FreeCellsCollapser();
@@ -125,7 +124,8 @@ public class GameLoop {
 
       cleanMatches(gameAction);
       cellsDropper.dropCells(gameAction.getGame().getBoard().getCells());
-      createNewCells(gameAction.getGame().getBoard().getCells());
+      boardOperations.recreateClearedCells(gameAction.getGame().getBoard().getCells());
+      boardOperations.recreateCellsIfNoMoves(gameAction.getGame().getBoard());
 
 //      gameRules.checkGameEndingByMoving(gameAction.getGame());
       gameRules.switchCurrentPlayer(gameAction.getGame());
@@ -144,18 +144,6 @@ public class GameLoop {
     Set<Cell> matches = matchesFinder.findMatches(gameAction.getGame().getBoard().getCells());
     for (Cell cell : matches) {
       cell.setCleared(true);
-    }
-  }
-
-  private void createNewCells(Cell[][] cells) {
-    for (int x = 0; x < cells.length; x++) {
-      for (int y = 0; y < cells[x].length; y++) {
-        Cell cell = cells[x][y];
-        if (cell.isCleared()) {
-          cell.setCleared(false);
-          cell.setType(gameCreator.createRandomCellType());
-        }
-      }
     }
   }
 
