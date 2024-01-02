@@ -36,7 +36,7 @@ public class CellsDropper {
   }
 
   private int getDY(int y, int x, Cell[][] cells) {
-    if (y >= cells[x].length) {
+    if (y + 1 >= cells[x].length) {
       return 0;
     }
 

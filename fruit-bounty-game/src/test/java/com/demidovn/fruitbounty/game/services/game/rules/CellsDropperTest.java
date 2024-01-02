@@ -54,6 +54,9 @@ public class CellsDropperTest {
     cells[1][3].setCleared(true);
     cells[1][4].setCleared(true);
 
+    cells[3][5].setCleared(true);
+    cells[3][6].setCleared(true);
+
     return cells;
   }
 

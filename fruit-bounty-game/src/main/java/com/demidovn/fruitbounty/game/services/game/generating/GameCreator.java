@@ -19,9 +19,6 @@ public class GameCreator {
   private final Random rand = new Random();
   private final MatchesFinder matchesFinder = new MatchesFinder();
 
-  private InitPlayersCellsConfigurator initPlayersCellsConfigurator =
-    new InitPlayersCellsConfigurator();
-
   public Game createNewGame(List<Player> players, boolean isTutorial) {
     Game game = new Game();
     game.setTutorial(isTutorial);
@@ -33,10 +30,13 @@ public class GameCreator {
     setRandomCurrentPlayer(game);
 
     game.setBoard(createBoard(game));
-    initPlayersCellsConfigurator.configureInitPlayersCells(game);
     changeBoardIfTutorial(game);
 
     return game;
+  }
+
+  public int createRandomCellType() {
+    return rand.nextInt(GameOptions.CELL_TYPES_COUNT) + 1;
   }
 
   private void randomlyMixPlayers(List<Player> players) {
@@ -79,8 +79,7 @@ public class GameCreator {
 
     for (int x = 0; x < boardWidth; x++) {
       for (int y = 0; y < boardHeight; y++) {
-        int randomCellType = rand.nextInt(GameOptions.CELL_TYPES_COUNT) + 1;
-        cells[x][y] = new Cell(randomCellType, x, y);
+        cells[x][y] = new Cell(createRandomCellType(), x, y);
       }
     }
 

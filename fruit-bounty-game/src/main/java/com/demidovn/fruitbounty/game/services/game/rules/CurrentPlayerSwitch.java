@@ -23,17 +23,17 @@ public class CurrentPlayerSwitch extends AbstractGameRules {
 
     int iterations = 0;
     Player player = game.getCurrentPlayer();
-    boolean isMoveFeasible;
+    boolean isMoveFeasible = true;
 
     do {
       player = playersFinder.getNextPlayer(game, player.getId());
 
-      isMoveFeasible = moveFeasibilityChecker
-        .isAnyMoveFeasible(game.getBoard().getCells(), player.getId());
+//      isMoveFeasible = moveFeasibilityChecker
+//        .isAnyMoveFeasible(game.getBoard().getCells(), player.getId());
 
-      if (!isMoveFeasible) {
-        switchPlayerCells(game, player.getId());
-      }
+//      if (!isMoveFeasible) {
+//        switchPlayerCells(game, player.getId());
+//      }
 
       iterations++;
       if (isDeadLoop(game, iterations)) {
