@@ -5,7 +5,9 @@ import com.demidovn.fruitbounty.game.model.GameProcessingContext;
 import com.demidovn.fruitbounty.game.services.DefaultGameEventsSubscriptions;
 import com.demidovn.fruitbounty.game.services.FruitBountyGameFacade;
 import com.demidovn.fruitbounty.game.services.game.rules.FreeCellsCollapser;
+import com.demidovn.fruitbounty.game.services.game.rules.MatchesFinder;
 import com.demidovn.fruitbounty.game.services.game.rules.Swiper;
+import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import com.demidovn.fruitbounty.gameapi.model.GameActionType;
@@ -14,6 +16,7 @@ import com.demidovn.fruitbounty.gameapi.services.BotService;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,6 +39,7 @@ public class GameLoop {
 
   private static final GameRules gameRules = new GameRules();
   private static final FreeCellsCollapser freeCellsCollapser = new FreeCellsCollapser();
+  private static final MatchesFinder matchesFinder = new MatchesFinder();
   private static final Swiper swiper = new Swiper();
 
   @Scheduled(fixedDelayString = GameOptions.GAME_LOOP_SCHEDULE_DELAY)
@@ -103,6 +107,8 @@ public class GameLoop {
     if (gameRules.isMoveValid(gameAction)) {
       gameAction.getGame().getCurrentPlayer().resetConsecutivelyMissedMoves();
 
+      cleanMatches(gameAction);
+
 //      List<Cell> capturableCells = gameRules.findCapturableCells(gameAction);
 
 //      gameRules.captureCells(capturableCells, gameAction);
@@ -124,6 +130,13 @@ public class GameLoop {
     playerSurrendered(gameAction.findActionedPlayer(), gameAction.getGame());
 
     context.markGameChanged();
+  }
+
+  private void cleanMatches(GameAction gameAction) {
+    Set<Cell> matches = matchesFinder.findMatches(gameAction.getGame().getBoard().getCells());
+    for (Cell cell : matches) {
+      cell.setCleared(true);
+    }
   }
 
   private void playerSurrendered(Player player, Game game) {

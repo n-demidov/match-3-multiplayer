@@ -312,7 +312,7 @@ function gameBoardClicked(x, y) {
     point2: point2
   };
   sendGameAction(movePayload);
-
+  resetMove();
 
   // if (isMoveValid(xCellIndex, yCellIndex, validMoveCells)) {
   //
@@ -545,6 +545,10 @@ function paintBoard(game) {
     for (var y = 0; y < row.length; y++) {
       var cell = row[y];
 
+      if (cell.cleared) {
+        continue;
+      }
+
       drawFruit(cell);
 
       // paint selected cells
@@ -555,7 +559,6 @@ function paintBoard(game) {
         ctx.fillRect(x * cellSize, y * cellSize + BOARD_Y, cellSize, cellSize);
         ctx.globalAlpha = 1;
       }
-
       if (point2 !== undefined && cell.x === point2.x && cell.y === point2.y) {
         ctx.fillStyle = SECOND_PLAYER_CELLS_COLOR;
 
@@ -563,18 +566,6 @@ function paintBoard(game) {
         ctx.fillRect(x * cellSize, y * cellSize + BOARD_Y, cellSize, cellSize);
         ctx.globalAlpha = 1;
       }
-
-      // if (cell.owner) {
-      //   if (cell.owner === game.players[0].id) {
-      //     ctx.fillStyle = FIRST_PLAYER_CELLS_COLOR;
-      //   } else {
-      //     ctx.fillStyle = SECOND_PLAYER_CELLS_COLOR;
-      //   }
-      //
-      //   ctx.globalAlpha = CAPTURED_OPACITY_CELL;
-      //   ctx.fillRect(x * cellSize, y * cellSize + BOARD_Y, cellSize, cellSize);
-      //   ctx.globalAlpha = 1;
-      // }
     }
   }
 }
