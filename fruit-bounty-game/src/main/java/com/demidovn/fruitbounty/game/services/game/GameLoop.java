@@ -4,6 +4,7 @@ import com.demidovn.fruitbounty.game.GameOptions;
 import com.demidovn.fruitbounty.game.model.GameProcessingContext;
 import com.demidovn.fruitbounty.game.services.DefaultGameEventsSubscriptions;
 import com.demidovn.fruitbounty.game.services.FruitBountyGameFacade;
+import com.demidovn.fruitbounty.game.services.game.rules.CellsDropper;
 import com.demidovn.fruitbounty.game.services.game.rules.FreeCellsCollapser;
 import com.demidovn.fruitbounty.game.services.game.rules.MatchesFinder;
 import com.demidovn.fruitbounty.game.services.game.rules.Swiper;
@@ -41,6 +42,7 @@ public class GameLoop {
   private static final FreeCellsCollapser freeCellsCollapser = new FreeCellsCollapser();
   private static final MatchesFinder matchesFinder = new MatchesFinder();
   private static final Swiper swiper = new Swiper();
+  private static final CellsDropper cellsDropper = new CellsDropper();
 
   @Scheduled(fixedDelayString = GameOptions.GAME_LOOP_SCHEDULE_DELAY)
   public void gameLoop() {
@@ -107,20 +109,21 @@ public class GameLoop {
     if (gameRules.isMoveValid(gameAction)) {
       gameAction.getGame().getCurrentPlayer().resetConsecutivelyMissedMoves();
 
-      cleanMatches(gameAction);
-
 //      List<Cell> capturableCells = gameRules.findCapturableCells(gameAction);
-
 //      gameRules.captureCells(capturableCells, gameAction);
-      if (context.isCollapseBoard()) {
-        freeCellsCollapser.collapseBoard(
-            gameAction.getGame().getBoard().getCells(),
-            freeCellsCollapser.getCollapsedFigures(gameAction.getGame().getBoard().getCells()));
-      }
-      gameRules.checkGameEndingByMoving(gameAction.getGame());
-      gameRules.switchCurrentPlayer(gameAction.getGame());
+//      if (context.isCollapseBoard()) {
+//        freeCellsCollapser.collapseBoard(
+//            gameAction.getGame().getBoard().getCells(),
+//            freeCellsCollapser.getCollapsedFigures(gameAction.getGame().getBoard().getCells()));
+//      }
 
       swiper.swipe(gameAction.getGame().getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
+
+      cleanMatches(gameAction);
+      cellsDropper.dropCells(gameAction.getGame().getBoard().getCells());
+
+      gameRules.checkGameEndingByMoving(gameAction.getGame());
+      gameRules.switchCurrentPlayer(gameAction.getGame());
 
       context.markGameChanged();
     }

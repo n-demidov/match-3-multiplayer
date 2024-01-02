@@ -54,7 +54,8 @@ public class Game {
     for (int x = 0; x < sourceCells.length; x++) {
       for (int y = 0; y < sourceCells[0].length; y++) {
         Cell cell = sourceCells[x][y];
-        copiedCells[x][y] = new Cell(cell.getOwner(), cell.getType(), cell.getX(), cell.getY());
+        copiedCells[x][y] = new Cell(cell.getType(), cell.isCleared(), cell.getOwner(),
+            cell.getX(), cell.getY());
       }
     }
 

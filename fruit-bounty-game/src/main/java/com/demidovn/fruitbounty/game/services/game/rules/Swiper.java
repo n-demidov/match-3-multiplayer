@@ -10,9 +10,12 @@ public class Swiper {
     Cell cell2 = cells[point2.getX()][point2.getY()];
 
     int cell1Type = cell1.getType();
-
     cell1.setType(cell2.getType());
     cell2.setType(cell1Type);
+
+    boolean cell1Cleared = cell1.isCleared();
+    cell1.setCleared(cell2.isCleared());
+    cell2.setCleared(cell1Cleared);
   }
 
 }
