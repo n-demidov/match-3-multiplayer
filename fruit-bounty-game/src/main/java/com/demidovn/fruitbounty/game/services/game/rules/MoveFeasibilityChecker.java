@@ -1,40 +1,30 @@
 package com.demidovn.fruitbounty.game.services.game.rules;
 
 import com.demidovn.fruitbounty.gameapi.model.Cell;
-import java.util.Collection;
+import com.demidovn.fruitbounty.gameapi.model.Game;
+import com.demidovn.fruitbounty.gameapi.model.Point;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class MoveFeasibilityChecker extends AbstractGameRules {
+  private static final Swiper swiper = new Swiper();
+  private static final MatchesFinder matchesFinder = new MatchesFinder();
 
-  public boolean isAnyMoveFeasible(Cell[][] cells, long playerId) {
-    Collection<Integer> busyCellTypes = findBusyCellTypes(cells, playerId);
-
+  public boolean isAnyMovePossible(Cell[][] cells) {
     for (int x = 0; x < cells.length; x++) {
       for (int y = 0; y < cells[x].length; y++) {
-        Cell cell = cells[x][y];
-        List<Long> neighborCellsTypes = getNeighborCells(cells, x, y)
-          .stream()
-          .map(Cell::getOwner)
-          .collect(Collectors.toList());
+        List<Cell> neighborCells = getNeighborCells(cells, x, y);
 
-        if (cell.getOwner() == 0 &&
-          !busyCellTypes.contains(cell.getType()) &&
-          neighborCellsTypes.contains(playerId)) {
-          return true;
+        for (Cell neighbor : neighborCells) {
+          Cell[][] copiedCells = Game.copyCells(cells);
+          swiper.swipe(copiedCells, new Point(x, y), new Point(neighbor.getX(), neighbor.getY()));
+          if (!matchesFinder.findMatches(copiedCells).isEmpty()) {
+            return true;
+          }
         }
       }
     }
 
     return false;
-  }
-
-  private Collection<Integer> findBusyCellTypes(Cell[][] cells, long playerId) {
-    Map<Long, Integer> playersCellTypes = findPlayersCellTypes(cells);
-    playersCellTypes.remove(playerId);
-
-    return playersCellTypes.values();
   }
 
 }
