@@ -533,7 +533,7 @@ function incrementStoryIdx(game) {
   if (story.storyIdxCounter >= story.storyIdxCounterMax) {
     story.storyIdxCounter = 0;
 
-    if (story.storyIdx + 1 < game.lastStories.length) {
+    if (story.storyIdx + 1 <= game.lastStories.length) {
       story.storyIdx++;
     }
   }

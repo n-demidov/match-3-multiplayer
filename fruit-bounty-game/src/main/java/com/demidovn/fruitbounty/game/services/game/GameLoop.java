@@ -132,7 +132,7 @@ public class GameLoop {
       boardOperations.recreateClearedCells(game.getBoard().getCells());
       game.getLastStories().add(new GameStory(game));
       boardOperations.recreateCellsIfNoMoves(game.getBoard());
-      game.getLastStories().add(new GameStory(game));
+//      game.getLastStories().add(new GameStory(game));
 
 //      gameRules.checkGameEndingByMoving(gameAction.getGame());
       gameRules.switchCurrentPlayer(game);
