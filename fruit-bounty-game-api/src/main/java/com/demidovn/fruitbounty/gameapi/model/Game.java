@@ -2,6 +2,8 @@ package com.demidovn.fruitbounty.gameapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -27,6 +29,7 @@ public class Game {
 
   private boolean isFinished;
   private Player winner;
+  private List<GameStory> lastStories = new ArrayList<>();
 
   @JsonIgnore
   private final Queue<GameAction> gameActions = new ConcurrentLinkedQueue<>();
@@ -44,7 +47,8 @@ public class Game {
         fromGame.currentMoveStarted,
         fromGame.clientCurrentMoveTimeLeft,
         fromGame.isFinished,
-        Player.copyPlayer(fromGame.winner)
+        Player.copyPlayer(fromGame.winner),
+        Collections.emptyList()
     );
   }
 
@@ -80,6 +84,10 @@ public class Game {
       playerId,
       this
     ));
+  }
+
+  public Game deepCopy() {
+    return copy(this);
   }
 
   @Override

@@ -14,7 +14,6 @@ public class Cell {
   @Deprecated
   private long owner;
 
-  @JsonIgnore
   private final int x, y;
 
   public Cell(int type, int x, int y) {

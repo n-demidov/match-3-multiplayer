@@ -81,6 +81,7 @@ var canvas;
 var ctx;
 var timerId;
 var animation = {};
+var story = {};
 var game;
 var oldGame;
 var capturedCellsAnimation;
@@ -107,6 +108,8 @@ function initGameUi() {
 function processGameStartedOperation(newGame) {
   window.game = newGame;
   $(".background").css("background-image", "url(" + imgGameScreen.src + ")");
+
+  resetStoryIdx();
 
   canvas = document.getElementById(CANVAS_ID);
   cellSize = getCanvasWidth() / getCellsCount();
@@ -188,21 +191,21 @@ function processGameChangedOperation(newGame) {
   movesCounter += 1;
 
   newGame.incomingTime = Date.now();
+  resetStoryIdx();
 
   resetMove();
-  fillBoardWithCoords();
   resetPossibleCellsAnimation();
-  prepareCapturedCellsAnimation(oldGame, newGame);
   paintGame(newGame);
 
   if (!game.finished && isPaintHelpTutorialAnimation(game)) {
-    startHelpAnimation();
+    // startHelpAnimation();
   }
 
   timerId = setInterval(
     function() {
-      preparePossibleCellsAnimation(newGame);
+      // preparePossibleCellsAnimation(newGame);
       paintGame(newGame);
+      incrementStoryIdx(newGame);
     },
     TIMER_INTERVAL);
 }
@@ -355,20 +358,6 @@ function resetOpponentTurnAnimation() {
   animation.opponentTurnStartedMs = undefined;
 }
 
-function fillBoardWithCoords() {
-  var cells = game.board.cells;
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-
-      cell.x = x;
-      cell.y = y;
-    }
-  }
-}
-
 function isMoveValid(x, y, validCells) {
   for (var i = 0; i < validCells.length; i++) {
     var validCell = validCells[i];
@@ -408,7 +397,7 @@ function paintGame(game) {
   paintOpponentTurnAnimation();
   paintBusyTypeAnimation();
   if (!game.finished) {
-    paintCellsCapturingAnimation();
+    // paintCellsCapturingAnimation();
     if (isPaintHelpTutorialAnimation(game)) {
       continueHelpAnimation();
     }
@@ -532,13 +521,41 @@ function paintPlayer(player, game, playerSide) {
   }
 }
 
+
+function resetStoryIdx() {
+  story.storyIdx = 0;
+  story.storyIdxCounter = 0;
+  story.storyIdxCounterMax = 4;
+}
+
+function incrementStoryIdx(game) {
+  story.storyIdxCounter++;
+  if (story.storyIdxCounter >= story.storyIdxCounterMax) {
+    story.storyIdxCounter = 0;
+
+    if (story.storyIdx + 1 < game.lastStories.length) {
+      story.storyIdx++;
+    }
+  }
+}
+
+function getActualBoard(game) {
+  if (game.lastStories.length === 0 ||
+      story.storyIdx >= game.lastStories.length) {
+    return game.board.cells;
+  }
+
+  return game.lastStories[story.storyIdx].gameState.board.cells;
+}
+
 function paintBoard(game) {
   // Fill background
   ctx.fillStyle = "white";
   ctx.globalAlpha = 1;
   ctx.fillRect(BOARD_X, BOARD_Y, boardWidth, boardHeight);
 
-  var cells = game.board.cells;
+  var cells = getActualBoard(game);
+
   for (var x = 0; x < cells.length; x++) {
     var row = cells[x];
 
@@ -584,7 +601,7 @@ function paintPossibleCellsAnimation(game) {
   }
 
   var validMoveCells = findValidMoveCells(userInfo.id, game);
-  var cells = game.board.cells;
+  var cells = getActualBoard(game);
   for (var x = 0; x < cells.length; x++) {
     var row = cells[x];
 
@@ -627,7 +644,7 @@ function fillBackgroundCell(cell) {
 function paintBoardGrid(game) {
   ctx.fillStyle = BOARD_GRID_COLOR;
 
-  var cells = game.board.cells;
+  var cells = getActualBoard(game);
   for (var x = 0; x < cells.length; x++) {
     var row = cells[x];
 
@@ -730,34 +747,6 @@ function paintStrokedText(text, x, y) {
 
   ctx.fillStyle = 'white';
   ctx.fillText(text, x, y);
-}
-
-function getPlayerStartedCell(game, playerId) {
-  if (playerId === game.players[0].id) {
-    return {"x": BOARD_X, "y": BOARD_Y};
-  } else {
-    var cells = game.board.cells;
-    return {
-      "x": BOARD_X + (cells.length - 1) * cellSize,
-      "y": BOARD_Y + (cells[0].length - 1) * cellSize};
-  }
-}
-
-function countPlayerCells(cells, playerId) {
-  var playerCells = 0;
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-
-      if (cell.owner === playerId) {
-        playerCells++;
-      }
-    }
-  }
-
-  return playerCells;
 }
 
 function paintHelpAnimation() {

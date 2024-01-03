@@ -13,6 +13,7 @@ import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import com.demidovn.fruitbounty.gameapi.model.GameActionType;
+import com.demidovn.fruitbounty.gameapi.model.GameStory;
 import com.demidovn.fruitbounty.gameapi.model.Player;
 import com.demidovn.fruitbounty.gameapi.services.BotService;
 import java.time.Instant;
@@ -109,8 +110,9 @@ public class GameLoop {
   }
 
   private void processMoveAction(GameAction gameAction, GameProcessingContext context) {
+    Game game = gameAction.getGame();
     if (gameRules.isMoveValid(gameAction)) {
-      gameAction.getGame().getCurrentPlayer().resetConsecutivelyMissedMoves();
+      game.getCurrentPlayer().resetConsecutivelyMissedMoves();
 
 //      List<Cell> capturableCells = gameRules.findCapturableCells(gameAction);
 //      gameRules.captureCells(capturableCells, gameAction);
@@ -120,15 +122,20 @@ public class GameLoop {
 //            freeCellsCollapser.getCollapsedFigures(gameAction.getGame().getBoard().getCells()));
 //      }
 
-      swiper.swipe(gameAction.getGame().getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
+      swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
+      game.getLastStories().add(new GameStory(game));
 
       cleanMatches(gameAction);
-      cellsDropper.dropCells(gameAction.getGame().getBoard().getCells());
-      boardOperations.recreateClearedCells(gameAction.getGame().getBoard().getCells());
-      boardOperations.recreateCellsIfNoMoves(gameAction.getGame().getBoard());
+      game.getLastStories().add(new GameStory(game));
+      cellsDropper.dropCells(game.getBoard().getCells());
+      game.getLastStories().add(new GameStory(game));
+      boardOperations.recreateClearedCells(game.getBoard().getCells());
+      game.getLastStories().add(new GameStory(game));
+      boardOperations.recreateCellsIfNoMoves(game.getBoard());
+      game.getLastStories().add(new GameStory(game));
 
 //      gameRules.checkGameEndingByMoving(gameAction.getGame());
-      gameRules.switchCurrentPlayer(gameAction.getGame());
+      gameRules.switchCurrentPlayer(game);
 
       context.markGameChanged();
     }
