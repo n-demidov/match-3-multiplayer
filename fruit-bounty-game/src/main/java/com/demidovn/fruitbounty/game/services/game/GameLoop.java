@@ -127,10 +127,13 @@ public class GameLoop {
 
       cleanMatches(gameAction);
       game.getLastStories().add(new GameStory(game));
+
       cellsDropper.dropCells(game.getBoard().getCells());
       game.getLastStories().add(new GameStory(game));
+
       boardOperations.recreateClearedCells(game.getBoard().getCells());
       game.getLastStories().add(new GameStory(game));
+
       boardOperations.recreateCellsIfNoMoves(game.getBoard());
 //      game.getLastStories().add(new GameStory(game));
 
