@@ -2,23 +2,31 @@ package com.demidovn.fruitbounty.game.services.game.rules;
 
 import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CellsDropper {
   private static final Swiper swiper = new Swiper();
 
-  public void dropCells(Cell[][] cells) {
+  public DroppedResult dropCells(Cell[][] cells) {
+    DroppedResult droppedResult = new DroppedResult();
     for (int x = 0; x <cells.length; x++) {
       for (int y = cells[x].length - 2; y >= 0; y--) {
         Cell cell = cells[x][y];
         if (cell.isCleared()) {
           continue;
         }
-        dropCell(cell, cells);
+        int dropDepth = dropCell(cell, cells);
+        if (dropDepth > 0) {
+          droppedResult.dropDepth = dropDepth;
+          droppedResult.droppedCells.add(cell);
+        }
       }
     }
+    return droppedResult;
   }
 
-  private void dropCell(Cell cell, Cell[][] cells) {
+  private int dropCell(Cell cell, Cell[][] cells) {
     int x = cell.getX();
     int y = cell.getY();
 
@@ -33,6 +41,8 @@ public class CellsDropper {
     if (y != cell.getY()) {
       swiper.swipe(cells, new Point(cell.getX(), cell.getY()), new Point(x, y));
     }
+
+    return y - cell.getY();
   }
 
   private int getDY(int y, int x, Cell[][] cells) {
@@ -41,6 +51,11 @@ public class CellsDropper {
     }
 
     return 1;
+  }
+
+  public static class DroppedResult {
+    public int dropDepth;
+    public List<Cell> droppedCells = new ArrayList<>();
   }
 
 }
