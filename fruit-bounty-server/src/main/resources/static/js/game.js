@@ -539,6 +539,15 @@ function incrementStoryIdx(game) {
   }
 }
 
+function getActualGameStory(game) {
+  if (game.lastStories.length === 0 ||
+      story.storyIdx >= game.lastStories.length) {
+    return {};  //todo: make empty?
+  }
+
+  return game.lastStories[story.storyIdx];
+}
+
 function getActualBoard(game) {
   if (game.lastStories.length === 0 ||
       story.storyIdx >= game.lastStories.length) {
@@ -566,7 +575,7 @@ function paintBoard(game) {
         continue;
       }
 
-      drawFruit(cell);
+      drawFruit(cell, game);
 
       // paint selected cells
       if (point1 !== undefined && cell.x === point1.x && cell.y === point1.y) {
@@ -587,12 +596,45 @@ function paintBoard(game) {
   }
 }
 
-function drawFruit(cell) {
+function foundCell(cell, cells) {
+  for(var i = 0; i < cells.length; i++) {
+    if (cells[i].x === cell.x && cells[i].y === cell.y) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function drawFruit(cell, game) {
   var fruitImgCoords = getImageCoordinates(cell);
+
+  var x = cell.x * cellSize;
+  var y = cell.y * cellSize + BOARD_Y;
+
+  var gameStory = getActualGameStory(game);
+  if (gameStory.type === 'DROP_CELLS' &&
+      foundCell(cell, gameStory.specialCells)) {
+    y += story.storyIdxCounter * 0.25 * cellSize;
+
+    // It's for the 'New created balls':
+    // y += -gameStory.dropDepth * cellSize;// - cellSize;
+    // y += story.storyIdxCounter * 0.25 * cellSize;
+  }
+
   ctx.drawImage(
     fruitsImage,
     fruitImgCoords.x, fruitImgCoords.y, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
-    cell.x * cellSize, cell.y * cellSize + BOARD_Y, cellSize, cellSize);
+    x, y, cellSize, cellSize);
+
+  // if (gameStory.type === 'DROP_CELLS' &&
+  //     // gameStory.specialCells.includes(cell)
+  //     // gameStory.specialCells.find(e => (e.x === cell.x && e.y === cell.y))
+  //     foundCell(cell, gameStory.specialCells)
+  // ) {
+  //   ctx.fillStyle = "blue";
+  //   ctx.globalAlpha = 1;
+  //   ctx.fillRect(cell.x * cellSize, cell.y * cellSize + BOARD_Y, cellSize, cellSize);
+  // }
 }
 
 function paintPossibleCellsAnimation(game) {
@@ -879,7 +921,7 @@ function paintCellsCapturingAnimation() {
         // Redraw old fruit
         var oldCell = capturedCellsAnimation[player.id].oldCells[i];
         fillBackgroundCell(oldCell);
-        drawFruit(oldCell);
+        drawFruit(oldCell, game);
       }
 
       if (cell.owner) {

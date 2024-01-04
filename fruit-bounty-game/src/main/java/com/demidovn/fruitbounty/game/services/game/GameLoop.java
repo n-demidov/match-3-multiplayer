@@ -6,6 +6,7 @@ import com.demidovn.fruitbounty.game.services.DefaultGameEventsSubscriptions;
 import com.demidovn.fruitbounty.game.services.FruitBountyGameFacade;
 import com.demidovn.fruitbounty.game.services.game.rules.BoardOperations;
 import com.demidovn.fruitbounty.game.services.game.rules.CellsDropper;
+import com.demidovn.fruitbounty.game.services.game.rules.CellsDropper.DroppedResult;
 import com.demidovn.fruitbounty.game.services.game.rules.MatchesFinder;
 import com.demidovn.fruitbounty.game.services.game.rules.Swiper;
 import com.demidovn.fruitbounty.gameapi.model.Cell;
@@ -13,6 +14,7 @@ import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import com.demidovn.fruitbounty.gameapi.model.GameActionType;
 import com.demidovn.fruitbounty.gameapi.model.GameStory;
+import com.demidovn.fruitbounty.gameapi.model.GameStoryType;
 import com.demidovn.fruitbounty.gameapi.model.Player;
 import com.demidovn.fruitbounty.gameapi.services.BotService;
 import java.time.Instant;
@@ -113,21 +115,26 @@ public class GameLoop {
       game.getCurrentPlayer().resetConsecutivelyMissedMoves();
 
       swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
-      game.getLastStories().add(new GameStory(game));
+      game.getLastStories().add(new GameStory(game.deepCopy()));
 
       do {
         cleanMatches(gameAction);
-        game.getLastStories().add(new GameStory(game));
+        game.getLastStories().add(new GameStory(game.deepCopy()));
 
-        cellsDropper.dropCells(game.getBoard().getCells());
-        game.getLastStories().add(new GameStory(game)); // todo: not always was change (drop down balls)
+        Game gameState = game.deepCopy();
+        DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
+        if (droppedResult.dropDepth > 0) {
+          game.getLastStories().add(new GameStory(
+              GameStoryType.DROP_CELLS, gameState, droppedResult.droppedCells, droppedResult.dropDepth));
+        }
 
-        boardOperations.recreateClearedCells(game.getBoard().getCells());
-        game.getLastStories().add(new GameStory(game));
+        List<Cell> createdCells = boardOperations.recreateClearedCells(game.getBoard().getCells(), droppedResult.dropDepth);
+        game.getLastStories().add(new GameStory(game.deepCopy()));
+//        game.getLastStories().add(new GameStory(GameStoryType.DROP_CELLS, game.deepCopy(), createdCells, dropDepth));
       } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
 
       boardOperations.recreateCellsIfNoMoves(game.getBoard());
-//      game.getLastStories().add(new GameStory(game));  //todo: if was change - add state and print 'No moves'
+//      game.getLastStories().add(new GameStory(game.deepCopy()));  //todo: if was change - add state and print 'No moves'
 
 //      gameRules.checkGameEndingByMoving(gameAction.getGame());
       gameRules.switchCurrentPlayer(game);
