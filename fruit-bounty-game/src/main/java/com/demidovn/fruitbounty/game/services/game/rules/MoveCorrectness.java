@@ -17,7 +17,7 @@ public class MoveCorrectness extends AbstractGameRules {
     return isPlayerCurrent(gameAction)
         && isActionBeforeGameExpired(gameAction)
         && areCellsNeighbors(gameAction.getPoint1(), gameAction.getPoint2())
-        && isMatch(gameAction);
+        && isMatchAfterMove(gameAction);
   }
 
   private boolean isPlayerCurrent(GameAction gameAction) {
@@ -34,7 +34,7 @@ public class MoveCorrectness extends AbstractGameRules {
     return Math.abs(point1.getX() - point2.getX()) + Math.abs(point1.getY() - point2.getY()) == 1;
   }
 
-  private boolean isMatch(GameAction gameAction) {
+  private boolean isMatchAfterMove(GameAction gameAction) {
     Game copiedGame = Game.copy(gameAction.getGame());
 
     swiper.swipe(copiedGame.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());

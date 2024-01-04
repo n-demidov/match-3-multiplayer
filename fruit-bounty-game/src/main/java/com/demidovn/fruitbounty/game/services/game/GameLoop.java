@@ -120,16 +120,14 @@ public class GameLoop {
         game.getLastStories().add(new GameStory(game));
 
         cellsDropper.dropCells(game.getBoard().getCells());
-        game.getLastStories().add(new GameStory(game));
+        game.getLastStories().add(new GameStory(game)); // todo: not always was change (drop down balls)
 
         boardOperations.recreateClearedCells(game.getBoard().getCells());
         game.getLastStories().add(new GameStory(game));
       } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
 
       boardOperations.recreateCellsIfNoMoves(game.getBoard());
-
-
-//      game.getLastStories().add(new GameStory(game));
+//      game.getLastStories().add(new GameStory(game));  //todo: if was change - add state and print 'No moves'
 
 //      gameRules.checkGameEndingByMoving(gameAction.getGame());
       gameRules.switchCurrentPlayer(game);
