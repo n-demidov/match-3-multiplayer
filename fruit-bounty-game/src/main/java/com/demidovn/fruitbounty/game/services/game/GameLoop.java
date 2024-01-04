@@ -129,8 +129,8 @@ public class GameLoop {
         }
 
         List<Cell> createdCells = boardOperations.recreateClearedCells(game.getBoard().getCells(), droppedResult.dropDepth);
-        game.getLastStories().add(new GameStory(game.deepCopy()));
-//        game.getLastStories().add(new GameStory(GameStoryType.DROP_CELLS, game.deepCopy(), createdCells, dropDepth));
+        game.getLastStories().add(new GameStory(
+            GameStoryType.CREATED_CELLS, game.deepCopy(), createdCells, droppedResult.dropDepth == 0 ? 1 : droppedResult.dropDepth));
       } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
 
       boardOperations.recreateCellsIfNoMoves(game.getBoard());

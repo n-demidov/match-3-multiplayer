@@ -619,6 +619,10 @@ function drawFruit(cell, game) {
     // It's for the 'New created balls':
     // y += -gameStory.dropDepth * cellSize;// - cellSize;
     // y += story.storyIdxCounter * 0.25 * cellSize;
+  } else if (gameStory.type === 'CREATED_CELLS' &&
+      foundCell(cell, gameStory.specialCells)) {
+    y += story.storyIdxCounter * 0.25 * cellSize;
+    y += -gameStory.dropDepth * cellSize;
   }
 
   ctx.drawImage(
@@ -626,14 +630,13 @@ function drawFruit(cell, game) {
     fruitImgCoords.x, fruitImgCoords.y, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
     x, y, cellSize, cellSize);
 
-  // if (gameStory.type === 'DROP_CELLS' &&
-  //     // gameStory.specialCells.includes(cell)
-  //     // gameStory.specialCells.find(e => (e.x === cell.x && e.y === cell.y))
-  //     foundCell(cell, gameStory.specialCells)
-  // ) {
+  // if (gameStory.type === 'CREATED_CELLS' &&
+  //     foundCell(cell, gameStory.specialCells)) {
   //   ctx.fillStyle = "blue";
+  //   ctx.globalAlpha = 0.5;
+  //   // ctx.fillRect(cell.x * cellSize, cell.y * cellSize + BOARD_Y, cellSize, cellSize);
+  //   ctx.fillRect(x * cellSize, y * cellSize + BOARD_Y, cellSize, cellSize);
   //   ctx.globalAlpha = 1;
-  //   ctx.fillRect(cell.x * cellSize, cell.y * cellSize + BOARD_Y, cellSize, cellSize);
   // }
 }
 
