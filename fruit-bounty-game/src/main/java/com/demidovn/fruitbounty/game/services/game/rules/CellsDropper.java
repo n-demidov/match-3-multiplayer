@@ -18,7 +18,7 @@ public class CellsDropper {
         }
         int dropDepth = dropCell(cell, cells);
         if (dropDepth > 0) {
-          droppedResult.dropDepth = dropDepth;
+          droppedResult.dropDepth = Math.max(dropDepth, droppedResult.dropDepth);
           droppedResult.droppedCells.add(cell);
         }
       }

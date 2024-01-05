@@ -525,12 +525,13 @@ function paintPlayer(player, game, playerSide) {
 function resetStoryIdx() {
   story.storyIdx = 0;
   story.storyIdxCounter = 0;
-  story.storyIdxCounterMax = 4;
 }
 
 function incrementStoryIdx(game) {
+  var gameStory = getActualGameStory(game);
+
   story.storyIdxCounter++;
-  if (story.storyIdxCounter >= story.storyIdxCounterMax) {
+  if (story.storyIdxCounter >= gameStory.storyIdxCounterMax) {
     story.storyIdxCounter = 0;
 
     if (story.storyIdx + 1 <= game.lastStories.length) {
