@@ -615,10 +615,6 @@ function drawFruit(cell, game) {
   if (gameStory.type === 'DROP_CELLS' &&
       foundCell(cell, gameStory.specialCells)) {
     y += story.storyIdxCounter * 0.25 * cellSize;
-
-    // It's for the 'New created balls':
-    // y += -gameStory.dropDepth * cellSize;// - cellSize;
-    // y += story.storyIdxCounter * 0.25 * cellSize;
   } else if (gameStory.type === 'CREATED_CELLS' &&
       foundCell(cell, gameStory.specialCells)) {
     y += story.storyIdxCounter * 0.25 * cellSize;
