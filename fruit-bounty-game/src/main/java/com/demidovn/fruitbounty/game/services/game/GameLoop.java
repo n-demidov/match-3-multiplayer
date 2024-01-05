@@ -140,9 +140,8 @@ public class GameLoop {
       } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
 
       boardOperations.recreateCellsIfNoMoves(game.getBoard());
-//      game.getLastStories().add(new GameStory(game.deepCopy()));  //todo: if was change - add state and print 'No moves'
 
-//      gameRules.checkGameEndingByMoving(gameAction.getGame());
+//      gameRules.checkGameEndingByMoving(gameAction.getGame()); //todo
       gameRules.switchCurrentPlayer(game);
 
       game.setTotalAnimationTimeMs(game.getLastStories().stream()
