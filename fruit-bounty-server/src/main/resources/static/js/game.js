@@ -392,6 +392,7 @@ function paintGame(game) {
   paintBoard(game);
   paintPossibleCellsAnimation(game);
   paintBoardGrid(game);
+  hideBoard(game);
   paintHelpAnimation();
   paintOpponentTurnAnimation();
   paintBusyTypeAnimation();
@@ -545,6 +546,15 @@ function getActualGameStory(game) {
   }
 
   return game.lastStories[story.storyIdx];
+}
+
+function getActualGame(game) {
+  var gameStory = getActualGameStory(game);
+  if (isObjectEmpty(gameStory)) {
+    return game;
+  }
+
+  return game.lastStories[story.storyIdx].gameState;
 }
 
 function getActualBoard(game) {
@@ -727,6 +737,15 @@ function paintBoardGrid(game) {
   ctx.moveTo(0, 0);
   ctx.lineTo(0, BOARD_Y + boardHeight);
   ctx.stroke();
+}
+function hideBoard(game) {
+  var game = getActualGame(game);
+
+  if (isCurrentTurn(game)) {
+    return;
+  }
+
+  darkenCells([], false);
 }
 
 function getImageCoordinates(cell) {
