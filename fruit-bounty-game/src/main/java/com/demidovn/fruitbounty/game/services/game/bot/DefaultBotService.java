@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultBotService implements BotService {
 
-  private static final int BOT_WAITING_MOVE_TIME = 1300 * 3;
+  private static final int BOT_WAITING_MOVE_TIME = 1300;
   private static final int MAX_BOT_WINS = 10;
   private static final int MIN_BOT_DEFEATS = 20;
   private static final int MAX_BOT_DEFEATS = 100;
@@ -127,7 +127,8 @@ public class DefaultBotService implements BotService {
   }
 
   private boolean isWaitEnoughTime(Game game) {
-    return Instant.now().toEpochMilli() - game.getCurrentMoveStarted() > BOT_WAITING_MOVE_TIME;
+    return Instant.now().toEpochMilli() - game.getCurrentMoveStarted()
+        > BOT_WAITING_MOVE_TIME + game.getTotalAnimationTimeMs();
   }
 
   private long getBotId(int playerScore) {

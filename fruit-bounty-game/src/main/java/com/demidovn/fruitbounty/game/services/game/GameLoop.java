@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameLoop {
 
+  private static final int ANIMATION_TIMER_INTERVAL = 90;
   private static final int MIN_GAME_ACTIONS_IN_QUEUE_TO_WARNING = 20;
 
   @Autowired
@@ -138,6 +139,9 @@ public class GameLoop {
 
 //      gameRules.checkGameEndingByMoving(gameAction.getGame());
       gameRules.switchCurrentPlayer(game);
+
+      game.setTotalAnimationTimeMs(game.getLastStories().stream()
+          .mapToInt(g -> g.getStoryIdxCounterMax() * ANIMATION_TIMER_INTERVAL).sum());
 
       context.markGameChanged();
     }

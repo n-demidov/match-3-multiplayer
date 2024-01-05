@@ -30,6 +30,8 @@ public class Game {
   private boolean isFinished;
   private Player winner;
   private List<GameStory> lastStories = new ArrayList<>();
+  @JsonIgnore
+  private int totalAnimationTimeMs;
 
   @JsonIgnore
   private final Queue<GameAction> gameActions = new ConcurrentLinkedQueue<>();
@@ -48,7 +50,8 @@ public class Game {
         fromGame.clientCurrentMoveTimeLeft,
         fromGame.isFinished,
         Player.copyPlayer(fromGame.winner),
-        Collections.emptyList()
+        Collections.emptyList(),
+        fromGame.totalAnimationTimeMs
     );
   }
 
