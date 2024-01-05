@@ -486,6 +486,8 @@ function paintPlayers(game) {
 }
 
 function paintPlayer(player, game, playerSide) {
+  var game = getActualGame();
+
   // Player's image
   var playerImage = $('#' + playerSide + '-pl-img');
   if (playerImage.attr('src') !== prepareServerImg(player.img)) {
