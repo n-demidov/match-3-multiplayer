@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class GameStory {
-  private static final int STANDARD_ANIMATION_ITER = 4;
+  private static final int STANDARD_ANIMATION_ITER = 4;  // todo: extract to general consts or delete
 
   private GameStoryType type;
   private Game gameState;
