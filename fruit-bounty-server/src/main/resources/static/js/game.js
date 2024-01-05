@@ -549,12 +549,12 @@ function getActualGameStory(game) {
 }
 
 function getActualBoard(game) {
-  if (game.lastStories.length === 0 ||
-      story.storyIdx >= game.lastStories.length) {
+  var gameStory = getActualGameStory(game);
+
+  if (isObjectEmpty(gameStory)) {
     return game.board.cells;
   }
-
-  return game.lastStories[story.storyIdx].gameState.board.cells;
+  return gameStory.gameState.board.cells;
 }
 
 function paintBoard(game) {
@@ -1089,4 +1089,8 @@ function getCanvasHeight() {
 
 function getCellsCount() {
   return game.board.cells.length;
+}
+
+function isObjectEmpty(value) {
+  return Object.keys(value).length === 0;
 }
