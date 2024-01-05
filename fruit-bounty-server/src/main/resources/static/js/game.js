@@ -746,7 +746,7 @@ function hideBoard() {
     return;
   }
 
-  darkenCells([], false);
+  darkenCells([], false, 0.2);
 }
 
 function getImageCoordinates(cell) {
@@ -851,7 +851,7 @@ function paintHelpAnimation() {
 
   var recommendedCell = highlightCells[Math.floor(highlightCells.length / 2)];
 
-  darkenCells(findValidMoveCells(userInfo.id, game), true);
+  darkenCells(findValidMoveCells(userInfo.id, game), true, 0.5);
 
   // Paint hand icon.
   if (animation.handValue < 0 || animation.handValue > HAND_ICON_ANIMATION_MOVES_MAX) {
@@ -913,7 +913,7 @@ function paintShortText(text) {
   paintStrokedText(text, centerX, centerY);
 }
 
-function darkenCells(exceptCells, excludeCapturedCells) {
+function darkenCells(exceptCells, excludeCapturedCells, opacity) {
   var cells = game.board.cells;
   for (var x = 0; x < cells.length; x++) {
     var row = cells[x];
@@ -928,7 +928,7 @@ function darkenCells(exceptCells, excludeCapturedCells) {
         continue;
       }
 
-      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      ctx.fillStyle = "rgba(0, 0, 0, " + opacity + ")";
       ctx.fillRect(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize);
     }
   }
