@@ -20,7 +20,9 @@ import com.demidovn.fruitbounty.gameapi.services.BotService;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,6 +42,9 @@ public class GameLoop {
 
   @Autowired
   private BotService botService;
+
+  @Autowired
+  private GameStoryCreator gameStoryCreator;
 
   private BoardOperations boardOperations = new BoardOperations();
 
@@ -115,22 +120,23 @@ public class GameLoop {
       game.getCurrentPlayer().resetConsecutivelyMissedMoves();
 
       swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
-      game.getLastStories().add(new GameStory(game.deepCopy()));
+      game.getLastStories().add(gameStoryCreator.create(game.deepCopy()));
 
       do {
         cleanMatches(gameAction);
-        game.getLastStories().add(new GameStory(game.deepCopy()));
+        game.getLastStories().add(gameStoryCreator.create(game.deepCopy()));
 
         Game gameState = game.deepCopy();
         DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
-        if (droppedResult.dropDepth > 0) {
-          game.getLastStories().add(new GameStory(
-              GameStoryType.DROP_CELLS, gameState, droppedResult.droppedCells, droppedResult.dropDepth));
+        if (droppedResult.droppedCells.size() > 0) {
+          game.getLastStories().add(
+              gameStoryCreator.create(GameStoryType.DROP_CELLS, gameState, droppedResult.droppedCells, droppedResult.dropDepth));
         }
 
-        List<Cell> createdCells = boardOperations.recreateClearedCells(game.getBoard().getCells(), droppedResult.dropDepth);
-        game.getLastStories().add(new GameStory(
-            GameStoryType.CREATED_CELLS, game.deepCopy(), createdCells, droppedResult.dropDepth == 0 ? 1 : droppedResult.dropDepth));
+        List<Cell> createdCells = boardOperations.recreateClearedCells(game.getBoard().getCells());
+        int recreationDepth = findRecreationDepth(createdCells);
+        game.getLastStories().add(
+            gameStoryCreator.create(GameStoryType.CREATED_CELLS, game.deepCopy(), createdCells, recreationDepth));
       } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
 
       boardOperations.recreateCellsIfNoMoves(game.getBoard());
@@ -157,6 +163,14 @@ public class GameLoop {
     for (Cell cell : matches) {
       cell.setCleared(true);
     }
+  }
+
+  private int findRecreationDepth(List<Cell> specialCells) {
+    Map<Integer, Long> countsByX = specialCells
+        .stream()
+        .collect(Collectors.groupingBy(Cell::getX, Collectors.counting()));
+
+    return countsByX.values().stream().max(Long::compareTo).orElse(0L).intValue();
   }
 
   private void playerSurrendered(Player player, Game game) {

@@ -15,7 +15,7 @@ public class BoardOperations {
   private final MoveFeasibilityChecker moveFeasibilityChecker = new MoveFeasibilityChecker();
   private final MatchesFinder matchesFinder = new MatchesFinder();
 
-  public List<Cell> recreateClearedCells(Cell[][] cells, int dropDepth) {
+  public List<Cell> recreateClearedCells(Cell[][] cells) {
     List<Cell> createdCells = new ArrayList<>();
     for (int x = 0; x < cells.length; x++) {
       for (int y = 0; y < cells[x].length; y++) {

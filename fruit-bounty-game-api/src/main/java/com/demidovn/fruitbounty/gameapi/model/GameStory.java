@@ -10,7 +10,6 @@ public class GameStory {
   private GameStoryType type;
   private Game gameState;
   private List<Cell> specialCells;
-  private int dropDepth;
   private int storyIdxCounterMax;
 
   public GameStory(Game game) {
@@ -22,7 +21,6 @@ public class GameStory {
     this.type = type;
     this.gameState = game;
     this.specialCells = specialCells;
-    this.dropDepth = dropDepth;
     this.storyIdxCounterMax = STANDARD_ANIMATION_ITER * dropDepth;
   }
 }
