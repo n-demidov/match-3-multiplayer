@@ -278,6 +278,7 @@ function canvasClicked(e) {
 }
 
 function gameBoardClicked(x, y) {
+  var game = getActualGame();
   if (game.finished) {
     return;
   }
@@ -392,7 +393,7 @@ function paintGame(game) {
   paintBoard(game);
   paintPossibleCellsAnimation(game);
   paintBoardGrid(game);
-  hideBoard(game);
+  hideBoard();
   paintHelpAnimation();
   paintOpponentTurnAnimation();
   paintBusyTypeAnimation();
@@ -548,7 +549,7 @@ function getActualGameStory(game) {
   return game.lastStories[story.storyIdx];
 }
 
-function getActualGame(game) {
+function getActualGame() {
   var gameStory = getActualGameStory(game);
   if (isObjectEmpty(gameStory)) {
     return game;
@@ -738,8 +739,8 @@ function paintBoardGrid(game) {
   ctx.lineTo(0, BOARD_Y + boardHeight);
   ctx.stroke();
 }
-function hideBoard(game) {
-  var game = getActualGame(game);
+function hideBoard() {
+  var game = getActualGame();
 
   if (isCurrentTurn(game)) {
     return;
