@@ -616,6 +616,7 @@ function drawFruit(cell, game) {
   if (gameStory.type === 'DROP_CELLS' &&
       foundCell(cell, gameStory.specialCells)) {
     y += story.storyIdxCounter * 0.25 * cellSize;
+
     var targetY = initY + findDepthBelow(cell, gameStory.gameState.board.cells) * cellSize;
     if (y > targetY) {
       y = targetY;
@@ -623,7 +624,11 @@ function drawFruit(cell, game) {
   } else if (gameStory.type === 'CREATED_CELLS' &&
       foundCell(cell, gameStory.specialCells)) {
     y += story.storyIdxCounter * 0.25 * cellSize;
-    y += -gameStory.dropDepth * cellSize;
+    y += -findColumnDepth(cell, gameStory.specialCells) * cellSize;
+
+    if (y > initY) {
+      y = initY;
+    }
   }
 
   ctx.drawImage(
@@ -1013,6 +1018,19 @@ function findDepthBelow(cell, cells) {
     }
   }
   return result;
+}
+
+function findColumnDepth(cell, specialCells) {
+  var x = cell.x;
+  var result = 0;
+
+  for (var i = 0; i < specialCells.length; i++) {
+    var specialCell = specialCells[i];
+    if (specialCell.x === x) {
+      result = Math.max(specialCell.y, result);
+    }
+  }
+  return result + 1;
 }
 
 function isCellNeighbor(cell, playerId, cells) {
