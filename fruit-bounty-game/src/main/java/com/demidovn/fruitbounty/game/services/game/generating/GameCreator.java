@@ -1,5 +1,7 @@
 package com.demidovn.fruitbounty.game.services.game.generating;
 
+import static com.demidovn.fruitbounty.game.GameOptions.ANIMATION_TIMER_INTERVAL_MS;
+
 import com.demidovn.fruitbounty.game.GameOptions;
 import com.demidovn.fruitbounty.game.services.game.rules.BoardOperations;
 import com.demidovn.fruitbounty.gameapi.model.Board;
@@ -21,6 +23,7 @@ public class GameCreator {
 
   public Game createNewGame(List<Player> players, boolean isTutorial) {
     Game game = new Game();
+    game.setAnimationTimerIntervalMs(ANIMATION_TIMER_INTERVAL_MS);
     game.setTutorial(isTutorial);
 
     if (!game.isTutorial()) {
