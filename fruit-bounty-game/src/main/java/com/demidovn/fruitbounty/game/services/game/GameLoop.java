@@ -130,7 +130,7 @@ public class GameLoop {
         DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
         if (droppedResult.droppedCells.size() > 0) {
           game.getLastStories().add(
-              gameStoryCreator.create(GameStoryType.DROP_CELLS, gameState, droppedResult.droppedCells, droppedResult.dropDepth));
+              gameStoryCreator.create(GameStoryType.DROP_CELLS, gameState, droppedResult.droppedCells, droppedResult.dropDepthMax));
         }
 
         List<Cell> createdCells = boardOperations.recreateClearedCells(game.getBoard().getCells());
