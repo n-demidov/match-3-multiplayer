@@ -548,7 +548,7 @@ function startSwitchCellAnimation(success, point1, point2) {
 function resetSwitchCellAnimation(success, point1, point2) {
   switchCellAnimation.enabled = false;
   switchCellAnimation.idxCounter = 0;
-  switchCellAnimation.idxCounterMax = 4;
+  switchCellAnimation.idxCounterMax = 3;
 
   switchCellAnimation.success = success;
   switchCellAnimation.point1 = point1;
@@ -665,7 +665,7 @@ function drawFruit(cell, game) {
     if (switchCellAnimation.success) {
       // NOOP
     } else {
-      if (switchCellAnimation.idxCounter < 2) {
+      if (switchCellAnimation.idxCounter <= 1) {
         var switchedPoint;
         if (anyCoordsSame(cell, [switchCellAnimation.point1])) {
           switchedPoint = switchCellAnimation.point2;
@@ -677,6 +677,9 @@ function drawFruit(cell, game) {
         initY = switchedPoint.y * cellSize + BOARD_Y;
         x = initX;
         y = initY;
+      } else if (switchCellAnimation.idxCounter === 2) {
+        initY -= 2;
+        y -= 2;
       }
     }
   } else if (gameStory.type === 'DROP_CELLS' &&
@@ -701,15 +704,6 @@ function drawFruit(cell, game) {
     fruitsImage,
     fruitImgCoords.x, fruitImgCoords.y, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
     x, y, cellSize, cellSize);
-
-  // if (gameStory.type === 'CREATED_CELLS' &&
-  //     foundCell(cell, gameStory.specialCells)) {
-  //   ctx.fillStyle = "blue";
-  //   ctx.globalAlpha = 0.5;
-  //   // ctx.fillRect(cell.x * cellSize, cell.y * cellSize + BOARD_Y, cellSize, cellSize);
-  //   ctx.fillRect(x * cellSize, y * cellSize + BOARD_Y, cellSize, cellSize);
-  //   ctx.globalAlpha = 1;
-  // }
 }
 
 function paintPossibleCellsAnimation(game) {
