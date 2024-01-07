@@ -1,6 +1,6 @@
 package com.demidovn.fruitbounty.game.services.game.rules;
 
-import static com.demidovn.fruitbounty.game.GameOptions.MATCHES;
+import static com.demidovn.fruitbounty.game.GameOptions.MIN_CELLS_TO_MATCH;
 
 import com.demidovn.fruitbounty.gameapi.model.Cell;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class MatchesFinder {
         Cell cell = type ? cells[x][y] : cells[y][x];
 
         if (y == 0 || cell.getType() != stack.peek().getType()) {
-          if (stack.size() >= MATCHES) {
+          if (stack.size() >= MIN_CELLS_TO_MATCH) {
             result.addAll(stack);
           }
           stack.clear();
@@ -35,7 +35,7 @@ public class MatchesFinder {
         stack.push(cell);
       }
 
-      if (stack.size() >= MATCHES) {
+      if (stack.size() >= MIN_CELLS_TO_MATCH) {
         result.addAll(stack);
       }
     }

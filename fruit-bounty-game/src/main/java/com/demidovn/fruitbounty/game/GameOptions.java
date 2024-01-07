@@ -11,7 +11,7 @@ public class GameOptions {
   public static final int SCORE_FOR_WIN_TUTORIAL_GAME = 1;
 
   public static final String CONFIG_PROPERTIES = "config.properties";
-  public static final int MATCHES = 3;
+  public static final int MIN_CELLS_TO_MATCH = 3;
   public static final int BOARD_WIDTH = 7;
   public static final int BOARD_HEIGHT = BOARD_WIDTH;
   public static final int TUTORIAL_BOARD_WIDTH = 9;
