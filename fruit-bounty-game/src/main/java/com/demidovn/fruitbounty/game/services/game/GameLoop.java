@@ -126,11 +126,11 @@ public class GameLoop {
         cleanMatches(gameAction);
         game.getLastStories().add(gameStoryCreator.create(game.deepCopy()));
 
-        Game gameState = game.deepCopy();
+        Game copiedState = game.deepCopy();
         DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
         if (droppedResult.droppedCells.size() > 0) {
           game.getLastStories().add(
-              gameStoryCreator.create(GameStoryType.DROP_CELLS, gameState, droppedResult.droppedCells, droppedResult.dropDepthMax));
+              gameStoryCreator.create(GameStoryType.DROP_CELLS, copiedState, droppedResult.droppedCells, droppedResult.dropDepthMax));
         }
 
         List<Cell> createdCells = boardOperations.recreateClearedCells(game.getBoard().getCells());
@@ -139,7 +139,11 @@ public class GameLoop {
             gameStoryCreator.create(GameStoryType.CREATED_CELLS, game.deepCopy(), createdCells, recreationDepth));
       } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
 
-      boardOperations.recreateCellsIfNoMoves(game.getBoard());
+      Game copiedState = game.deepCopy();
+      boolean updated = boardOperations.recreateCellsIfNoMoves(game.getBoard());
+      if (updated) {
+        game.getLastStories().add(gameStoryCreator.create(GameStoryType.RECREATE_BOARD, copiedState));
+      }
 
 //      gameRules.checkGameEndingByMoving(gameAction.getGame()); //todo
       gameRules.switchCurrentPlayer(game);

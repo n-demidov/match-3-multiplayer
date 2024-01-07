@@ -31,16 +31,17 @@ public class BoardOperations {
     return createdCells;
   }
 
-  public void recreateCellsIfNoMoves(Board board) {
+  public boolean recreateCellsIfNoMoves(Board board) {
     Cell[][] cells = board.getCells();
     if (moveFeasibilityChecker.isAnyMovePossible(cells)) {
-      return;
+      return false;
     }
 
     int boardWidth = cells.length;
     int boardHeight = cells[0].length;
 
     board.setCells(createBoard(boardWidth, boardHeight));
+    return true;
   }
 
   public Cell[][] createBoard(int boardWidth, int boardHeight) {

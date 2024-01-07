@@ -14,13 +14,24 @@ public class GameStory {
 
   public GameStory(Game game) {
     this.gameState = game;
-    this.storyIdxCounterMax = STANDARD_ANIMATION_ITER;
+    this.storyIdxCounterMax = getStandardAnimationIter(STANDARD_ANIMATION_ITER);
+  }
+
+  public GameStory(GameStoryType type, Game game) {
+    this.type = type;
+    this.gameState = game;
+    this.storyIdxCounterMax = getStandardAnimationIter(STANDARD_ANIMATION_ITER);
   }
 
   public GameStory(GameStoryType type, Game game, List<Cell> specialCells, int dropDepth) {
     this.type = type;
     this.gameState = game;
     this.specialCells = specialCells;
-    this.storyIdxCounterMax = STANDARD_ANIMATION_ITER * dropDepth;
+    this.storyIdxCounterMax = getStandardAnimationIter(dropDepth);
   }
+
+  private static int getStandardAnimationIter(int dropDepth) {
+    return STANDARD_ANIMATION_ITER * dropDepth;
+  }
+
 }

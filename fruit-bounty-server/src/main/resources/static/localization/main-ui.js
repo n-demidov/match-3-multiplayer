@@ -123,6 +123,10 @@ function getLocalization() {
       en: "Wait for your turn",
       ru: "Дождитесь своего хода"
     },
+    "noMoves": {
+      en: "No moves",
+      ru: "Закончились ходы"
+    },
     "mobile-layout": {
       en: "Please, flip your device horizontally.",
       ru: "Пожалуйста, расположите ваше устройство горизонтально."

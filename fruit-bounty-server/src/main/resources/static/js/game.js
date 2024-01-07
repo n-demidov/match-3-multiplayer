@@ -406,6 +406,7 @@ function paintGame(game) {
   paintBoardGrid(game);
   hideBoard();
   paintHelpAnimation();
+  paintShuffleAnimation();
   paintOpponentTurnAnimation();
   paintBusyTypeAnimation();
   if (!game.finished) {
@@ -941,6 +942,16 @@ function paintBusyTypeAnimation() {
   }
 
   paintShortText(localize('fruitIsOccupied'));
+}
+
+function paintShuffleAnimation() {
+  var gameStory = getActualGameStory(game);
+  if (gameStory.type !== 'RECREATE_BOARD') {
+    return;
+  }
+
+  paintShortText(localize('noMoves'));
+  resetOpponentTurnAnimation();
 }
 
 function paintOpponentTurnAnimation() {
