@@ -677,7 +677,7 @@ function drawFruit(cell, game) {
         initY = switchedPoint.y * cellSize + BOARD_Y;
         x = initX;
         y = initY;
-      } else if (switchCellAnimation.idxCounter === 2) {
+      } else if (switchCellAnimation.idxCounter === switchCellAnimation.idxCounterMax - 1) {
         initY -= 2;
         y -= 2;
       }
