@@ -9,6 +9,7 @@ var SECOND_PLAYER_CELLS_COLOR = "blue";
 var BOARD_GRID_COLOR = "black";
 
 var VALID_CELLS_WIDTH = 1;
+var MIN_CELLS_TO_MATCH = 3;
 
 var POSSIBLE_CELLS_ANIMATION_DURATION_MS = 1000 * 3;
 var VALID_MOVES_ANIMATION_DURATION_MS = POSSIBLE_CELLS_ANIMATION_DURATION_MS;
@@ -307,6 +308,13 @@ function gameBoardClicked(x, y) {
   if (!areCellsNeighbors(point1, point2)) {
     resetMove();
     return;
+  }
+
+  var cells = game.board.cells;
+  if (isMatchAfterMove(point1, point2, cells)) {
+    console.log('++++++++++++ matched');
+  } else {
+    console.log('++++++++++++ not matched');
   }
 
   var movePayload = {
@@ -1135,6 +1143,66 @@ function findSelfPlayer() {
     return  game.players[1];
   }
 }
+
+// Match Logic
+function isMatchAfterMove(point1, point2, cells) {
+  var copiedCells = JSON.parse(JSON.stringify(cells));
+
+  swipeCells(point1, point2, copiedCells);
+
+  return findMatches(copiedCells).size > 0;
+}
+
+function swipeCells(point1, point2, cells) {
+  var cell1 = cells[point1.x][point1.y];
+  var cell2 = cells[point2.x][point2.y];
+
+  var cell1Type = cell1.type;
+  cell1.type = cell2.type;
+  cell2.type = cell1Type;
+
+  var cell1Cleared = cell1.cleared;
+  cell1.cleared = cell2.cleared;
+  cell2.cleared = cell1Cleared;
+}
+
+function findMatches(cells) {
+  var result = new Set();
+
+  innerFindMatches(cells, true).forEach(result.add, result);
+  innerFindMatches(cells, false).forEach(result.add, result);
+
+  return result;
+}
+
+function innerFindMatches(cells, type) {
+  var result = new Set();
+
+  for (var x = 0; x < cells.length; x++) {
+    var stack = [];
+    for (var y = 0; y < cells[x].length; y++) {
+      var cell = type ? cells[x][y] : cells[y][x];
+
+      var top = stack[stack.length - 1];
+      if (y === 0 || cell.type !== top.type) {
+        if (stack.length >= MIN_CELLS_TO_MATCH) {
+          // result.addAll(stack);
+          stack.forEach(result.add, result);
+        }
+        stack = [];
+      }
+      stack.push(cell);
+    }
+
+    if (stack.length >= MIN_CELLS_TO_MATCH) {
+      // result.addAll(stack);
+      stack.forEach(result.add, result);
+    }
+  }
+
+  return result;
+}
+
 
 function getCanvasWidth() {
   var chatOutputScrolling = document.getElementById("chat-output-scrolling");
