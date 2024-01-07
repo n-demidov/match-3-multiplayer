@@ -548,7 +548,7 @@ function startSwitchCellAnimation(success, point1, point2) {
 function resetSwitchCellAnimation(success, point1, point2) {
   switchCellAnimation.enabled = false;
   switchCellAnimation.idxCounter = 0;
-  switchCellAnimation.idxCounterMax = 3;
+  switchCellAnimation.idxCounterMax = 4;
 
   switchCellAnimation.success = success;
   switchCellAnimation.point1 = point1;
@@ -677,6 +677,8 @@ function drawFruit(cell, game) {
         initY = switchedPoint.y * cellSize + BOARD_Y;
         x = initX;
         y = initY;
+      } else if (switchCellAnimation.idxCounter === switchCellAnimation.idxCounterMax - 2) {
+        // NOOP
       } else if (switchCellAnimation.idxCounter === switchCellAnimation.idxCounterMax - 1) {
         initY -= 2;
         y -= 2;
