@@ -82,6 +82,7 @@ var ctx;
 var timerId;
 var animation = {};
 var story = {};
+var switchCellAnimation = {};
 var game;
 var oldGame;
 var capturedCellsAnimation;
@@ -194,6 +195,7 @@ function processGameChangedOperation(newGame) {
   resetStoryIdx();
 
   resetMove();
+  resetSwitchCellAnimation();
   resetPossibleCellsAnimation();
   paintGame(newGame);
 
@@ -206,6 +208,7 @@ function processGameChangedOperation(newGame) {
       // preparePossibleCellsAnimation(newGame);
       paintGame(newGame);
       incrementStoryIdx(newGame);
+      incrementSwitchCellAnimation();
     },
     newGame.animationTimerIntervalMs);
 }
@@ -312,9 +315,9 @@ function gameBoardClicked(x, y) {
 
   var cells = game.board.cells;
   if (isMatchAfterMove(point1, point2, cells)) {
-    console.log('++++++++++++ matched');
+    startSwitchCellAnimation(true, point1, point2);
   } else {
-    console.log('++++++++++++ not matched');
+    startSwitchCellAnimation(false, point1, point2);
   }
 
   var movePayload = {
@@ -537,6 +540,21 @@ function resetStoryIdx() {
   story.storyIdxCounter = 0;
 }
 
+function startSwitchCellAnimation(success, point1, point2) {
+  resetSwitchCellAnimation(success, point1, point2)
+  switchCellAnimation.enabled = true;
+}
+
+function resetSwitchCellAnimation(success, point1, point2) {
+  switchCellAnimation.enabled = false;
+  switchCellAnimation.idxCounter = 0;
+  switchCellAnimation.idxCounterMax = 4;
+
+  switchCellAnimation.success = success;
+  switchCellAnimation.point1 = point1;
+  switchCellAnimation.point2 = point2;
+}
+
 function incrementStoryIdx(game) {
   var gameStory = getActualGameStory(game);
 
@@ -547,6 +565,14 @@ function incrementStoryIdx(game) {
     if (story.storyIdx + 1 <= game.lastStories.length) {
       story.storyIdx++;
     }
+  }
+}
+
+function incrementSwitchCellAnimation() {
+  switchCellAnimation.idxCounter++;
+
+  if (switchCellAnimation.idxCounter >= switchCellAnimation.idxCounterMax) {
+    resetSwitchCellAnimation();
   }
 }
 
@@ -634,7 +660,26 @@ function drawFruit(cell, game) {
   var y = initY;
 
   var gameStory = getActualGameStory(game);
-  if (gameStory.type === 'DROP_CELLS' &&
+  if (switchCellAnimation.enabled &&
+      anyCoordsSame(cell, [switchCellAnimation.point1, switchCellAnimation.point2])) {
+    if (switchCellAnimation.success) {
+      // NOOP
+    } else {
+      if (switchCellAnimation.idxCounter < 2) {
+        var switchedPoint;
+        if (anyCoordsSame(cell, [switchCellAnimation.point1])) {
+          switchedPoint = switchCellAnimation.point2;
+        } else {
+          switchedPoint = switchCellAnimation.point1;
+        }
+
+        initX = switchedPoint.x * cellSize;
+        initY = switchedPoint.y * cellSize + BOARD_Y;
+        x = initX;
+        y = initY;
+      }
+    }
+  } else if (gameStory.type === 'DROP_CELLS' &&
       foundCell(cell, gameStory.specialCells)) {
     y += story.storyIdxCounter * 0.25 * cellSize;
 
@@ -1017,6 +1062,16 @@ function areCellsNeighbors(point1, point2) {
   }
 
   return true;
+}
+
+function anyCoordsSame(point1, points) {
+  for (var i = 0; i < points.length; i++) {
+    if (point1.x === points[i].x && point1.y === points[i].y) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function findOpponentCellType(playerId, game) {
