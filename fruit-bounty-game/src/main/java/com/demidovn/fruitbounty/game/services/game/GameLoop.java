@@ -46,8 +46,7 @@ public class GameLoop {
   @Autowired
   private GameStoryCreator gameStoryCreator;
 
-  private BoardOperations boardOperations = new BoardOperations();
-
+  private static final BoardOperations boardOperations = new BoardOperations();
   private static final GameRules gameRules = new GameRules();
   private static final MatchesFinder matchesFinder = new MatchesFinder();
   private static final Swiper swiper = new Swiper();
