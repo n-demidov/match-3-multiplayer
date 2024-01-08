@@ -344,7 +344,7 @@ function paintGame(game) {
   paintBoard(game);
   // paintPossibleCellsAnimation(game);
   paintBoardGrid(game);
-  hideBoard();
+  hideBoardIfOpponentTurn();
   paintShuffleAnimation();
   paintOpponentTurnAnimation();
   paintWinner(game);
@@ -674,7 +674,7 @@ function paintBoardGrid(game) {
   ctx.stroke();
 }
 
-function hideBoard() {
+function hideBoardIfOpponentTurn() {
   var game = getActualGame();
 
   if (isCurrentTurn(game)) {
