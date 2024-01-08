@@ -23,14 +23,8 @@ var HAND_ICON_ANIMATION_SPEED = 2;
 var HAND_ICON_ANIMATION_MOVES_MAX = 5;
 var HAND_ICON_ANIMATION_START_MOVES = HAND_ICON_ANIMATION_MOVES_MAX + HAND_ICON_ANIMATION_SPEED;
 
-var POSSIBLE_CELLS_ANIMATION_INTERVAL_BETWEEN_NEW_MS = 1000 * 6;
-var POSSIBLE_CELLS_ANIMATION_SPEED = 1;
-var POSSIBLE_CELLS_ANIMATION_VALUE_MIN = -3;
-var POSSIBLE_CELLS_ANIMATION_VALUE_MAX = 1;
-var POSSIBLE_CELLS_ANIMATION_VALUE_STARTED = 1;
 
 var MAX_BUSY_TYPE_ANIMATION_OPACITY = 0.6;
-var MIN_BUSY_TYPE_ANIMATION_OPACITY = 0.3;
 var DELTA_BUSY_TYPE_OPACITY = 0.15;
 var busyTypeAnimationTempVar;
 var busyTypeAnimationTempVarDirect;
@@ -201,10 +195,6 @@ function processGameChangedOperation(newGame) {
   resetPossibleCellsAnimation();
   paintGame(newGame);
 
-  if (!game.finished && isPaintHelpTutorialAnimation(game)) {
-    // startHelpAnimation();
-  }
-
   timerId = setInterval(
     function() {
       // preparePossibleCellsAnimation(newGame);
@@ -329,38 +319,11 @@ function gameBoardClicked(x, y) {
   };
   sendGameAction(movePayload);
   resetMove();
-
-  // if (isMoveValid(xCellIndex, yCellIndex, validMoveCells)) {
-  //
-  // } else if (opponentCellType === targetMoveCell.type
-  //   && isCellNeighbor(targetMoveCell, userInfo.id, cells)) {
-  //   var opponentId = findOpponentId();
-  //   animation.busyCells = findPlayerCells(opponentId, game);
-  //   animation.busyCells.push(targetMoveCell);
-  //   animation.busyCellsStart = Date.now();
-  // } else {
-  //   startHelpAnimation();
-  // }
 }
 
 function resetMove() {
   point1 = undefined;
   point2 = undefined;
-}
-
-function startHelpAnimation() {
-  var validMoveCells = findValidMoveCells(userInfo.id, game);
-
-  animation.validMoves = validMoveCells;
-  animation.handReverseMoving = HAND_ICON_ANIMATION_SPEED;
-  animation.handValue = HAND_ICON_ANIMATION_START_MOVES;
-  animation.validMovesStart = Date.now();
-  startPossibleCellsAnimation();
-}
-
-function continueHelpAnimation() {
-  animation.validMovesStart = Date.now();
-  animation.possibleCellsLastMs = Date.now();
 }
 
 function startOpponentTurnAnimation() {
@@ -369,18 +332,6 @@ function startOpponentTurnAnimation() {
 
 function resetOpponentTurnAnimation() {
   animation.opponentTurnStartedMs = undefined;
-}
-
-function isMoveValid(x, y, validCells) {
-  for (var i = 0; i < validCells.length; i++) {
-    var validCell = validCells[i];
-
-    if (validCell.x === x && validCell.y === y) {
-      return  true;
-    }
-  }
-
-  return false;
 }
 
 function sendGameAction(movePayload) {
@@ -404,83 +355,12 @@ function paintGame(game) {
 
   paintPlayers(game);
   paintBoard(game);
-  paintPossibleCellsAnimation(game);
+  // paintPossibleCellsAnimation(game);
   paintBoardGrid(game);
   hideBoard();
-  paintHelpAnimation();
   paintShuffleAnimation();
   paintOpponentTurnAnimation();
-  paintBusyTypeAnimation();
-  if (!game.finished) {
-    // paintCellsCapturingAnimation();
-    if (isPaintHelpTutorialAnimation(game)) {
-      continueHelpAnimation();
-    }
-  }
   paintWinner(game);
-}
-
-function prepareCapturedCellsAnimation(oldGame, newGame) {
-  if (oldGame === undefined || newGame === undefined || newGame.finished) {
-    return;
-  }
-
-  for (var i = 0; i < game.players.length; i++) {
-    capturedCellsAnimation[game.players[i].id].cells = [];
-    capturedCellsAnimation[game.players[i].id].oldCells = [];
-  }
-
-  var cells = newGame.board.cells;
-  var playerIdLastChanges = findPlayerIdBoardChanges(oldGame, newGame, cells);
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-
-      if (cell.owner === playerIdLastChanges) {
-        capturedCellsAnimation[cell.owner].cells.push(cell);
-        capturedCellsAnimation[cell.owner].oldCells.push(oldGame.board.cells[x][y]);
-        capturedCellsAnimation[cell.owner].alpha = CAPTURING_CELL_ANIMATION_MIN;
-        capturedCellsAnimation[cell.owner].deltaAlpha = CAPTURING_CELL_ANIMATION_DELTA;
-        capturedCellsAnimation[cell.owner].started = Date.now();
-      }
-    }
-  }
-}
-
-function preparePossibleCellsAnimation(newGame) {
-  if (newGame.finished) {
-    return;
-  }
-
-  var validMovesTimeout = Date.now() - animation.possibleCellsLastMs;
-  if (validMovesTimeout > POSSIBLE_CELLS_ANIMATION_INTERVAL_BETWEEN_NEW_MS) {
-    startPossibleCellsAnimation();
-  } else if (validMovesTimeout > POSSIBLE_CELLS_ANIMATION_DURATION_MS) {
-    animation.possibleCellsEnabled = false;
-  }
-}
-
-function startPossibleCellsAnimation() {
-  animation.possibleCellsSpeed = POSSIBLE_CELLS_ANIMATION_SPEED;
-  animation.possibleCellsValue = POSSIBLE_CELLS_ANIMATION_VALUE_STARTED;
-  animation.possibleCellsLastMs = Date.now();
-  animation.possibleCellsEnabled = true;
-}
-
-function findPlayerIdBoardChanges(oldGame, newGame, cells) {
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-
-      if (cell.owner !== oldGame.board.cells[x][y].owner) {
-        return cell.owner;
-      }
-    }
-  }
 }
 
 function paintPlayers(game) {
@@ -579,6 +459,7 @@ function incrementSwitchCellAnimation() {
   }
 }
 
+
 function getActualGameStory(game) {
   if (game.lastStories.length === 0 ||
       story.storyIdx >= game.lastStories.length) {
@@ -605,6 +486,7 @@ function getActualBoard(game) {
   }
   return gameStory.gameState.board.cells;
 }
+
 
 function paintBoard(game) {
   // Fill background
@@ -728,51 +610,45 @@ function updateBounceIdx(bounceIdx) {
   return ++bounceIdx;
 }
 
-function paintPossibleCellsAnimation(game) {
-  if (game.finished || !isCurrentTurn(game) || !animation.possibleCellsEnabled) {
-    return;
-  }
-
-  var validMoveCells = findValidMoveCells(userInfo.id, game);
-  var cells = getActualBoard(game);
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-      if (!isMoveValid(x, y, validMoveCells)) {
-        continue;
-      }
-
-      // Fill background
-      fillBackgroundCell(cell);
-
-      // Paint zoomed fruit
-      var fruitImgCoords = getImageCoordinates(cell);
-      ctx.drawImage(
-        fruitsImage,
-        fruitImgCoords.x, fruitImgCoords.y, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
-        x * cellSize - animation.possibleCellsValue,
-        y * cellSize + BOARD_Y - animation.possibleCellsValue,
-        cellSize + animation.possibleCellsValue * 2,
-        cellSize + animation.possibleCellsValue * 2);
-    }
-  }
-
-  // Change animation values
-  if (animation.possibleCellsValue <= POSSIBLE_CELLS_ANIMATION_VALUE_MIN) {
-    animation.possibleCellsSpeed = Math.abs(animation.possibleCellsSpeed);
-  } else if (animation.possibleCellsValue >= POSSIBLE_CELLS_ANIMATION_VALUE_MAX) {
-    animation.possibleCellsSpeed = -Math.abs(animation.possibleCellsSpeed);
-  }
-  animation.possibleCellsValue += animation.possibleCellsSpeed;
-}
-
-function fillBackgroundCell(cell) {
-  ctx.fillStyle = "white";
-  ctx.globalAlpha = 1;
-  ctx.fillRect(cell.x * cellSize, cell.y * cellSize + BOARD_Y, cellSize, cellSize);
-}
+// function paintPossibleCellsAnimation(game) {
+//   if (game.finished || !isCurrentTurn(game) || !animation.possibleCellsEnabled) {
+//     return;
+//   }
+//
+//   var validMoveCells = findValidMoveCells(userInfo.id, game);
+//   var cells = getActualBoard(game);
+//   for (var x = 0; x < cells.length; x++) {
+//     var row = cells[x];
+//
+//     for (var y = 0; y < row.length; y++) {
+//       var cell = row[y];
+//       if (!isMoveValid(x, y, validMoveCells)) {
+//         continue;
+//       }
+//
+//       // Fill background
+//       fillBackgroundCell(cell);
+//
+//       // Paint zoomed fruit
+//       var fruitImgCoords = getImageCoordinates(cell);
+//       ctx.drawImage(
+//         fruitsImage,
+//         fruitImgCoords.x, fruitImgCoords.y, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
+//         x * cellSize - animation.possibleCellsValue,
+//         y * cellSize + BOARD_Y - animation.possibleCellsValue,
+//         cellSize + animation.possibleCellsValue * 2,
+//         cellSize + animation.possibleCellsValue * 2);
+//     }
+//   }
+//
+//   // Change animation values
+//   if (animation.possibleCellsValue <= POSSIBLE_CELLS_ANIMATION_VALUE_MIN) {
+//     animation.possibleCellsSpeed = Math.abs(animation.possibleCellsSpeed);
+//   } else if (animation.possibleCellsValue >= POSSIBLE_CELLS_ANIMATION_VALUE_MAX) {
+//     animation.possibleCellsSpeed = -Math.abs(animation.possibleCellsSpeed);
+//   }
+//   animation.possibleCellsValue += animation.possibleCellsSpeed;
+// }
 
 function paintBoardGrid(game) {
   ctx.fillStyle = BOARD_GRID_COLOR;
@@ -810,6 +686,7 @@ function paintBoardGrid(game) {
   ctx.lineTo(0, BOARD_Y + boardHeight);
   ctx.stroke();
 }
+
 function hideBoard() {
   var game = getActualGame();
 
@@ -841,9 +718,9 @@ function paintWinner(game) {
   }
 
   // Cells count
-  var playerCellsCount = findPlayerCells(userInfo.id, game).length;
+  var playerCellsCount = 0;
   var opponentId = findOpponentId();
-  var opponentCellsCount = findPlayerCells(opponentId, game).length;
+  var opponentCellsCount = 0;
   var text = playerCellsCount + "/" + opponentCellsCount;
   $('#subwindow-cells').text(text);
 
@@ -889,78 +766,6 @@ function paintStrokedText(text, x, y) {
 
   ctx.fillStyle = 'white';
   ctx.fillText(text, x, y);
-}
-
-function paintHelpAnimation() {
-  var validMovesTimeout = animation.validMovesStart + VALID_MOVES_ANIMATION_DURATION_MS - Date.now();
-  if (validMovesTimeout < 0) {
-    return;
-  }
-
-  // Find only one cell (to highlight).
-  var cells = game.board.cells;
-  var highlightSum = 999;
-  var highlightCells = [];
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-      if (animation.validMoves.includes(cell)) {
-        if (highlightSum > findCenterRange(x, y, cells)) {
-          highlightSum = findCenterRange(x, y, cells);
-          highlightCells = [];
-          highlightCells.push(cell);
-        } else if (highlightSum === findCenterRange(x, y, cells)) {
-          highlightCells.push(cell);
-        }
-      }
-    }
-  }
-  if (highlightCells.length === 0) {
-    return;
-  }
-
-  var recommendedCell = highlightCells[Math.floor(highlightCells.length / 2)];
-
-  darkenCells(findValidMoveCells(userInfo.id, game), true, 0.5);
-
-  // Paint hand icon.
-  if (animation.handValue < 0 || animation.handValue > HAND_ICON_ANIMATION_MOVES_MAX) {
-    animation.handReverseMoving *= -1;
-  }
-  animation.handValue += animation.handReverseMoving;
-
-  ctx.drawImage(
-    handImage,
-    recommendedCell.x * cellSize + cellSize *2/3 + animation.handValue,
-    recommendedCell.y * cellSize + BOARD_Y + cellSize *2/3 + animation.handValue,
-    cellSize,
-    cellSize);
-
-  paintShortText(localize('captureFruit'));
-}
-
-function paintBusyTypeAnimation() {
-  var busyCellsTimeout = animation.busyCellsStart + BUSY_TYPE_ANIMATION_DURATION_MS - Date.now();
-  if (busyCellsTimeout < 0) {
-    resetBusyTypeAnimation();
-    return;
-  }
-
-  for (var i = 0; i < animation.busyCells.length; i++) {
-    var cell = animation.busyCells[i];
-
-    ctx.fillStyle = "rgba(0, 0, 0, " + busyTypeAnimationTempVar + ")";
-    ctx.fillRect(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize);
-  }
-
-  busyTypeAnimationTempVar += busyTypeAnimationTempVarDirect;
-  if (busyTypeAnimationTempVar < MIN_BUSY_TYPE_ANIMATION_OPACITY
-    || busyTypeAnimationTempVar > MAX_BUSY_TYPE_ANIMATION_OPACITY) {
-    busyTypeAnimationTempVarDirect *= -1;
-  }
-
-  paintShortText(localize('fruitIsOccupied'));
 }
 
 function paintShuffleAnimation() {
@@ -1015,71 +820,9 @@ function darkenCells(exceptCells, excludeCapturedCells, opacity) {
   }
 }
 
-function paintCellsCapturingAnimation() {
-  for (var playerId = 0; playerId < game.players.length; playerId++) {
-    var player = game.players[playerId];
-
-    var timeout = capturedCellsAnimation[player.id].started + CAPTURING_CELLS_ANIMATION_DURATION_MS - Date.now();
-    if (timeout < 0) {
-      continue;
-    }
-
-    for (var i = 0; i < capturedCellsAnimation[player.id].cells.length; i++) {
-      var cell = capturedCellsAnimation[player.id].cells[i];
-
-      if (capturedCellsAnimation[player.id].deltaAlpha > 0) {
-        // Redraw old fruit
-        var oldCell = capturedCellsAnimation[player.id].oldCells[i];
-        fillBackgroundCell(oldCell);
-        drawFruit(oldCell, game);
-      }
-
-      if (cell.owner) {
-        if (cell.owner === game.players[0].id) {
-          ctx.fillStyle = FIRST_PLAYER_CELLS_COLOR;
-        } else {
-          ctx.fillStyle = SECOND_PLAYER_CELLS_COLOR;
-        }
-
-        var prevAlpha = ctx.globalAlpha;
-        ctx.globalAlpha = capturedCellsAnimation[player.id].alpha;
-        ctx.fillRect(cell.x * cellSize, cell.y * cellSize + BOARD_Y, cellSize, cellSize);
-        ctx.globalAlpha = prevAlpha;
-      }
-    }
-
-    capturedCellsAnimation[player.id].alpha += capturedCellsAnimation[player.id].deltaAlpha;
-    if (capturedCellsAnimation[player.id].alpha >= CAPTURING_CELL_ANIMATION_MAX) {
-      capturedCellsAnimation[player.id].deltaAlpha *= -1;
-    }
-  }
-}
-
 function findCenterRange(x, y, cells) {
   return Math.abs(cells.length / 2 - x) +
     Math.abs(cells.length / 2 - y);
-}
-
-function findValidMoveCells(playerId, game) {
-  var result = [];
-
-  var opponentCellType = findOpponentCellType(playerId, game);
-  var cells = game.board.cells;
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-
-      if (cell.owner === 0
-        && isCellNeighbor(cell, playerId, cells)
-        && cell.type !== opponentCellType) {
-        result.push(cell);
-      }
-    }
-  }
-
-  return result;
 }
 
 function areCellsNeighbors(point1, point2) {
@@ -1098,24 +841,6 @@ function anyCoordsSame(point1, points) {
   }
 
   return false;
-}
-
-function findOpponentCellType(playerId, game) {
-  // Works only for 2 players in game.
-  var cells = game.board.cells;
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-
-      if (cell.owner !== 0 && cell.owner !== playerId) {
-        return cell.type;
-      }
-    }
-  }
-
-  return -1;
 }
 
 function findDepthBelow(cell, cells) {
@@ -1144,67 +869,8 @@ function findColumnDepth(cell, specialCells) {
   return result + 1;
 }
 
-function isCellNeighbor(cell, playerId, cells) {
-  var x = cell.x;
-  var y = cell.y;
-  var lastXCell = cells.length - 1;
-  var lastYCell = cells[0].length - 1;
-
-  if (x > 0) {
-    if (cells[x - 1][y].owner === playerId) {
-      return true;
-    }
-  }
-
-  if (x < lastXCell) {
-    if (cells[x + 1][y].owner === playerId) {
-      return true;
-    }
-  }
-
-  if (y > 0) {
-    if (cells[x][y - 1].owner === playerId) {
-      return true;
-    }
-  }
-
-  if (y < lastYCell) {
-    if (cells[x][y + 1].owner === playerId) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function findPlayerCells(playerId, game) {
-  var result = [];
-  var cells = game.board.cells;
-  for (var x = 0; x < cells.length; x++) {
-    var row = cells[x];
-
-    for (var y = 0; y < row.length; y++) {
-      var cell = row[y];
-
-      if (cell.owner === playerId) {
-        result.push(cell);
-      }
-    }
-  }
-
-  return result;
-}
-
 function isCurrentTurn(game) {
   return userInfo.id === game.currentPlayer.id;
-}
-
-function isTutorial() {
-  return game.tutorial;
-}
-
-function isPaintHelpTutorialAnimation(game) {
-  return isTutorial() && isCurrentTurn(game) && game.turnsCount <= 6;
 }
 
 function findOpponentId() {
@@ -1212,7 +878,7 @@ function findOpponentId() {
   if (game.players[0].id === userInfo.id) {
     return game.players[1].id;
   } else {
-    return  game.players[0].id;
+    return game.players[0].id;
   }
 }
 
@@ -1221,7 +887,7 @@ function findSelfPlayer() {
   if (game.players[0].id === userInfo.id) {
     return game.players[0];
   } else {
-    return  game.players[1];
+    return game.players[1];
   }
 }
 
