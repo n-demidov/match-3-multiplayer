@@ -16,9 +16,9 @@ public class GameStoryCreator {
   private static final Map<GameStoryType, Integer> storyIdxCounterMaxs = new HashMap<>();
 
   static {
-    storyIdxCounterMaxs.put(GameStoryType.SWIPE, 3);
+    storyIdxCounterMaxs.put(GameStoryType.SWIPE, STANDARD_ANIMATION_ITER);
     storyIdxCounterMaxs.put(GameStoryType.MATCH, STANDARD_ANIMATION_ITER);
-    storyIdxCounterMaxs.put(GameStoryType.RECREATE_BOARD, STANDARD_ANIMATION_ITER);
+    storyIdxCounterMaxs.put(GameStoryType.RECREATE_BOARD, STANDARD_ANIMATION_ITER * 2);
   }
 
   public GameStory create(GameStoryType type, Game gameState) {
