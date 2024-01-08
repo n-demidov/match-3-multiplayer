@@ -8,21 +8,11 @@ var FIRST_PLAYER_CELLS_COLOR = "green";
 var SECOND_PLAYER_CELLS_COLOR = "blue";
 var BOARD_GRID_COLOR = "black";
 
-var VALID_CELLS_WIDTH = 1;
 var MIN_CELLS_TO_MATCH = 3;
 
 var BOUNCE_VAL = 2;
 
-var POSSIBLE_CELLS_ANIMATION_DURATION_MS = 1000 * 3;
-var VALID_MOVES_ANIMATION_DURATION_MS = POSSIBLE_CELLS_ANIMATION_DURATION_MS;
-var BUSY_TYPE_ANIMATION_DURATION_MS = 1000;
 var OPPONENT_TURN_ANIMATION_DURATION_MS = 1000;
-var CAPTURING_CELLS_ANIMATION_DURATION_MS = 90 * 5.5;
-
-var HAND_ICON_ANIMATION_SPEED = 2;
-var HAND_ICON_ANIMATION_MOVES_MAX = 5;
-var HAND_ICON_ANIMATION_START_MOVES = HAND_ICON_ANIMATION_MOVES_MAX + HAND_ICON_ANIMATION_SPEED;
-
 
 var MAX_BUSY_TYPE_ANIMATION_OPACITY = 0.6;
 var DELTA_BUSY_TYPE_OPACITY = 0.15;
@@ -31,7 +21,6 @@ var busyTypeAnimationTempVarDirect;
 
 var CAPTURING_CELL_ANIMATION_DELTA = 0.2;
 var CAPTURING_CELL_ANIMATION_MIN = CAPTURING_CELL_ANIMATION_DELTA;
-var CAPTURING_CELL_ANIMATION_MAX = 0.6;
 
 var CHANCE_TO_SHOW_ADDS_PERCENT = 100;
 
@@ -80,7 +69,6 @@ var animation = {};
 var story = {};
 var switchCellAnimation = {};
 var game;
-var oldGame;
 var capturedCellsAnimation;
 var movesCounter;
 var maxTimerProgressWidth;
@@ -182,7 +170,6 @@ function setImagesOnTags() {
 }
 
 function processGameChangedOperation(newGame) {
-  oldGame = window.game;
   window.game = newGame;
   killGameTimer();
   movesCounter += 1;
