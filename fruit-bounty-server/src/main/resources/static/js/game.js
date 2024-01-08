@@ -175,8 +175,8 @@ function processGameChangedOperation(newGame) {
   movesCounter += 1;
 
   newGame.incomingTime = Date.now();
-  resetStoryIdx();
 
+  resetStoryIdx();
   resetMove();
   resetSwitchCellAnimation();
   resetPossibleCellsAnimation();
