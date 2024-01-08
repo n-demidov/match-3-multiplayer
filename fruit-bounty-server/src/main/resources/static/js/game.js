@@ -11,6 +11,8 @@ var BOARD_GRID_COLOR = "black";
 var VALID_CELLS_WIDTH = 1;
 var MIN_CELLS_TO_MATCH = 3;
 
+var BOUNCE_VAL = 2;
+
 var POSSIBLE_CELLS_ANIMATION_DURATION_MS = 1000 * 3;
 var VALID_MOVES_ANIMATION_DURATION_MS = POSSIBLE_CELLS_ANIMATION_DURATION_MS;
 var BUSY_TYPE_ANIMATION_DURATION_MS = 1000;
@@ -679,8 +681,8 @@ function drawFruit(cell, game) {
       } else if (switchCellAnimation.idxCounter === switchCellAnimation.idxCounterMax - 2) {
         // NOOP
       } else if (switchCellAnimation.idxCounter === switchCellAnimation.idxCounterMax - 1) {
-        initY -= 2;
-        y -= 2;
+        initY -= BOUNCE_VAL;
+        y -= BOUNCE_VAL;
       }
     }
   } else if (gameStory.type === 'DROP_CELLS' &&
@@ -694,8 +696,8 @@ function drawFruit(cell, game) {
     }
 
     if (cell.bounceIdx === 0) {
-      initY -= 2;
-      y -= 2;
+      initY -= BOUNCE_VAL;
+      y -= BOUNCE_VAL;
     }
   } else if (gameStory.type === 'CREATED_CELLS' &&
       foundCell(cell, gameStory.specialCells)) {
@@ -708,8 +710,8 @@ function drawFruit(cell, game) {
     }
 
     if (cell.bounceIdx === 0) {
-      initY -= 2;
-      y -= 2;
+      initY -= BOUNCE_VAL;
+      y -= BOUNCE_VAL;
     }
   }
 
