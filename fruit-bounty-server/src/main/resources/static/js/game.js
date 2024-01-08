@@ -67,7 +67,7 @@ var ctx;
 var timerId;
 var animation = {};
 var story = {};
-var switchCellAnimation = {};
+var swipeCellAnimation = {};
 var game;
 var capturedCellsAnimation;
 var movesCounter;
@@ -178,7 +178,7 @@ function processGameChangedOperation(newGame) {
 
   resetStoryIdx();
   resetMove();
-  resetSwitchCellAnimation();
+  resetSwipeCellAnimation();
   resetPossibleCellsAnimation();
   paintGame(newGame);
 
@@ -187,7 +187,7 @@ function processGameChangedOperation(newGame) {
       // preparePossibleCellsAnimation(newGame);
       paintGame(newGame);
       incrementStoryIdx(newGame);
-      incrementSwitchCellAnimation();
+      incrementSwipeCellAnimation();
     },
     newGame.animationTimerIntervalMs);
 }
@@ -294,9 +294,9 @@ function gameBoardClicked(x, y) {
 
   var cells = game.board.cells;
   if (isMatchAfterMove(point1, point2, cells)) {
-    startSwitchCellAnimation(true, point1, point2);
+    startSwipeCellAnimation(true, point1, point2);
   } else {
-    startSwitchCellAnimation(false, point1, point2);
+    startSwipeCellAnimation(false, point1, point2);
   }
 
   var movePayload = {
@@ -410,19 +410,19 @@ function resetStoryIdx() {
   story.storyIdxCounter = 0;
 }
 
-function startSwitchCellAnimation(success, point1, point2) {
-  resetSwitchCellAnimation(success, point1, point2)
-  switchCellAnimation.enabled = true;
+function startSwipeCellAnimation(success, point1, point2) {
+  resetSwipeCellAnimation(success, point1, point2)
+  swipeCellAnimation.enabled = true;
 }
 
-function resetSwitchCellAnimation(success, point1, point2) {
-  switchCellAnimation.enabled = false;
-  switchCellAnimation.idxCounter = 0;
-  switchCellAnimation.idxCounterMax = 4;
+function resetSwipeCellAnimation(success, point1, point2) {
+  swipeCellAnimation.enabled = false;
+  swipeCellAnimation.idxCounter = 0;
+  swipeCellAnimation.idxCounterMax = 4;
 
-  switchCellAnimation.success = success;
-  switchCellAnimation.point1 = point1;
-  switchCellAnimation.point2 = point2;
+  swipeCellAnimation.success = success;
+  swipeCellAnimation.point1 = point1;
+  swipeCellAnimation.point2 = point2;
 }
 
 function incrementStoryIdx(game) {
@@ -438,11 +438,11 @@ function incrementStoryIdx(game) {
   }
 }
 
-function incrementSwitchCellAnimation() {
-  switchCellAnimation.idxCounter++;
+function incrementSwipeCellAnimation() {
+  swipeCellAnimation.idxCounter++;
 
-  if (switchCellAnimation.idxCounter >= switchCellAnimation.idxCounterMax) {
-    resetSwitchCellAnimation();
+  if (swipeCellAnimation.idxCounter >= swipeCellAnimation.idxCounterMax) {
+    resetSwipeCellAnimation();
   }
 }
 
@@ -531,25 +531,25 @@ function drawFruit(cell, game) {
   var y = initY;
 
   var gameStory = getActualGameStory(game);
-  if (switchCellAnimation.enabled &&
-      anyCoordsSame(cell, [switchCellAnimation.point1, switchCellAnimation.point2])) {
-    if (switchCellAnimation.success) {
+  if (swipeCellAnimation.enabled &&
+      anyCoordsSame(cell, [swipeCellAnimation.point1, swipeCellAnimation.point2])) {
+    if (swipeCellAnimation.success) {
       // NOOP
     } else {
-      if (switchCellAnimation.idxCounter <= 1) {
-        var switchedPoint;
-        if (anyCoordsSame(cell, [switchCellAnimation.point1])) {
-          switchedPoint = switchCellAnimation.point2;
+      if (swipeCellAnimation.idxCounter <= 1) {
+        var swipedPoint;
+        if (anyCoordsSame(cell, [swipeCellAnimation.point1])) {
+          swipedPoint = swipeCellAnimation.point2;
         } else {
-          switchedPoint = switchCellAnimation.point1;
+          swipedPoint = swipeCellAnimation.point1;
         }
 
-        initY = switchedPoint.y * cellSize + BOARD_Y;
-        x = switchedPoint.x * cellSize;
+        initY = swipedPoint.y * cellSize + BOARD_Y;
+        x = swipedPoint.x * cellSize;
         y = initY;
-      } else if (switchCellAnimation.idxCounter === switchCellAnimation.idxCounterMax - 2) {
+      } else if (swipeCellAnimation.idxCounter === swipeCellAnimation.idxCounterMax - 2) {
         // NOOP
-      } else if (switchCellAnimation.idxCounter === switchCellAnimation.idxCounterMax - 1) {
+      } else if (swipeCellAnimation.idxCounter === swipeCellAnimation.idxCounterMax - 1) {
         initY -= BOUNCE_VAL;
         y -= BOUNCE_VAL;
       }
