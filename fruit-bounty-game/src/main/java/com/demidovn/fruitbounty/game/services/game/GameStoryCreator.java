@@ -4,22 +4,37 @@ import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameStory;
 import com.demidovn.fruitbounty.gameapi.model.GameStoryType;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameStoryCreator {
+  private static final int STANDARD_ANIMATION_ITER = 4;  // todo: extract to general consts or delete
 
-  public GameStory create(Game gameState) {
-    return new GameStory(gameState);
+  private static final Map<GameStoryType, Integer> storyIdxCounterMaxs = new HashMap<>();
+
+  static {
+    storyIdxCounterMaxs.put(GameStoryType.SWIPE, 3);
+    storyIdxCounterMaxs.put(GameStoryType.MATCH, STANDARD_ANIMATION_ITER);
+    storyIdxCounterMaxs.put(GameStoryType.RECREATE_BOARD, STANDARD_ANIMATION_ITER);
   }
 
   public GameStory create(GameStoryType type, Game gameState) {
-    return new GameStory(type, gameState);
+    return new GameStory(type, gameState, storyIdxCounterMaxs.get(type));
   }
 
   public GameStory create(GameStoryType type, Game gameState, List<Cell> specialCells, int dropDepth) {
-    return new GameStory(type, gameState, specialCells, dropDepth + 1);
+    if (!(type == GameStoryType.DROP_CELLS || type == GameStoryType.CREATED_CELLS)) {
+      throw new UnsupportedOperationException();
+    }
+
+    return new GameStory(type, gameState, getStandardAnimationIter(dropDepth), specialCells);
+  }
+
+  private static int getStandardAnimationIter(int dropDepth) {
+    return STANDARD_ANIMATION_ITER * dropDepth + 2;
   }
 
 }

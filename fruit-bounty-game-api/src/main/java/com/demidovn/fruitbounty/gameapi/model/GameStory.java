@@ -5,33 +5,23 @@ import lombok.Data;
 
 @Data
 public class GameStory {
-  private static final int STANDARD_ANIMATION_ITER = 4;  // todo: extract to general consts or delete
 
   private GameStoryType type;
   private Game gameState;
   private List<Cell> specialCells;
   private int storyIdxCounterMax;
 
-  public GameStory(Game game) {
-    this.gameState = game;
-    this.storyIdxCounterMax = getStandardAnimationIter(STANDARD_ANIMATION_ITER);
-  }
-
-  public GameStory(GameStoryType type, Game game) {
+  public GameStory(GameStoryType type, Game game, int storyIdxCounterMax) {
     this.type = type;
     this.gameState = game;
-    this.storyIdxCounterMax = getStandardAnimationIter(STANDARD_ANIMATION_ITER);
+    this.storyIdxCounterMax = storyIdxCounterMax;
   }
 
-  public GameStory(GameStoryType type, Game game, List<Cell> specialCells, int dropDepth) {
+  public GameStory(GameStoryType type, Game game, int storyIdxCounterMax, List<Cell> specialCells) {
     this.type = type;
     this.gameState = game;
+    this.storyIdxCounterMax = storyIdxCounterMax;
     this.specialCells = specialCells;
-    this.storyIdxCounterMax = getStandardAnimationIter(dropDepth);
-  }
-
-  private static int getStandardAnimationIter(int dropDepth) {
-    return STANDARD_ANIMATION_ITER * dropDepth;
   }
 
 }

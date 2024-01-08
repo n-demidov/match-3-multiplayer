@@ -120,11 +120,11 @@ public class GameLoop {
       game.getCurrentPlayer().resetConsecutivelyMissedMoves();
 
       swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
-      game.getLastStories().add(gameStoryCreator.create(game.deepCopy()));
+      game.getLastStories().add(gameStoryCreator.create(GameStoryType.SWIPE, game.deepCopy()));
 
       do {
         cleanMatches(gameAction);
-        game.getLastStories().add(gameStoryCreator.create(game.deepCopy()));
+        game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy()));
 
         Game copiedState = game.deepCopy();
         DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
