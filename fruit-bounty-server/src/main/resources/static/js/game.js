@@ -655,9 +655,8 @@ function foundCell(cell, cells) {
 function drawFruit(cell, game) {
   var fruitImgCoords = getImageCoordinates(cell);
 
-  var initX = cell.x * cellSize;
   var initY = cell.y * cellSize + BOARD_Y;
-  var x = initX;
+  var x = cell.x * cellSize;
   var y = initY;
 
   var gameStory = getActualGameStory(game);
@@ -674,9 +673,8 @@ function drawFruit(cell, game) {
           switchedPoint = switchCellAnimation.point1;
         }
 
-        initX = switchedPoint.x * cellSize;
         initY = switchedPoint.y * cellSize + BOARD_Y;
-        x = initX;
+        x = switchedPoint.x * cellSize;
         y = initY;
       } else if (switchCellAnimation.idxCounter === switchCellAnimation.idxCounterMax - 2) {
         // NOOP
