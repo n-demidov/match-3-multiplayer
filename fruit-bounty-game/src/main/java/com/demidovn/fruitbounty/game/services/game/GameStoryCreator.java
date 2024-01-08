@@ -19,7 +19,7 @@ public class GameStoryCreator {
   }
 
   public GameStory create(GameStoryType type, Game gameState, List<Cell> specialCells, int dropDepth) {
-    return new GameStory(type, gameState, specialCells, dropDepth);
+    return new GameStory(type, gameState, specialCells, dropDepth + 1);
   }
 
 }

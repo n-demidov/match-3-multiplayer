@@ -692,6 +692,15 @@ function drawFruit(cell, game) {
     var targetY = initY + findDepthBelow(cell, gameStory.gameState.board.cells) * cellSize;
     if (y > targetY) {
       y = targetY;
+      if (cell.bounceIdx === undefined) {
+        cell.bounceIdx = -1;
+      }
+      cell.bounceIdx++;
+    }
+
+    if (cell.bounceIdx === 1) {
+      initY -= 2;
+      y -= 2;
     }
   } else if (gameStory.type === 'CREATED_CELLS' &&
       foundCell(cell, gameStory.specialCells)) {
@@ -700,6 +709,15 @@ function drawFruit(cell, game) {
 
     if (y > initY) {
       y = initY;
+      if (cell.bounceIdx === undefined) {
+        cell.bounceIdx = -1;
+      }
+      cell.bounceIdx++;
+    }
+
+    if (cell.bounceIdx === 1) {
+      initY -= 2;
+      y -= 2;
     }
   }
 
