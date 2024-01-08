@@ -345,8 +345,8 @@ function paintGame(game) {
   // paintPossibleCellsAnimation(game);
   paintBoardGrid(game);
   hideBoardIfOpponentTurn();
-  paintShuffleAnimation();
-  paintOpponentTurnAnimation();
+  paintShuffleText();
+  paintOpponentTurnText();
   paintWinner(game);
 }
 
@@ -755,7 +755,7 @@ function paintStrokedText(text, x, y) {
   ctx.fillText(text, x, y);
 }
 
-function paintShuffleAnimation() {
+function paintShuffleText() {
   var gameStory = getActualGameStory(game);
   if (gameStory.type !== 'RECREATE_BOARD') {
     return;
@@ -765,7 +765,7 @@ function paintShuffleAnimation() {
   resetOpponentTurnAnimation();
 }
 
-function paintOpponentTurnAnimation() {
+function paintOpponentTurnText() {
   if (animation.opponentTurnStartedMs === undefined) {
     return;
   }
