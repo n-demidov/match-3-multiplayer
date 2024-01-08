@@ -692,13 +692,10 @@ function drawFruit(cell, game) {
     var targetY = initY + findDepthBelow(cell, gameStory.gameState.board.cells) * cellSize;
     if (y > targetY) {
       y = targetY;
-      if (cell.bounceIdx === undefined) {
-        cell.bounceIdx = -1;
-      }
-      cell.bounceIdx++;
+      cell.bounceIdx = updateBounceIdx(cell.bounceIdx);
     }
 
-    if (cell.bounceIdx === 1) {
+    if (cell.bounceIdx === 0) {
       initY -= 2;
       y -= 2;
     }
@@ -709,13 +706,10 @@ function drawFruit(cell, game) {
 
     if (y > initY) {
       y = initY;
-      if (cell.bounceIdx === undefined) {
-        cell.bounceIdx = -1;
-      }
-      cell.bounceIdx++;
+      cell.bounceIdx = updateBounceIdx(cell.bounceIdx);
     }
 
-    if (cell.bounceIdx === 1) {
+    if (cell.bounceIdx === 0) {
       initY -= 2;
       y -= 2;
     }
@@ -725,6 +719,13 @@ function drawFruit(cell, game) {
     fruitsImage,
     fruitImgCoords.x, fruitImgCoords.y, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
     x, y, cellSize, cellSize);
+}
+
+function updateBounceIdx(bounceIdx) {
+  if (bounceIdx === undefined) {
+    return 0;
+  }
+  return ++bounceIdx;
 }
 
 function paintPossibleCellsAnimation(game) {
