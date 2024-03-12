@@ -135,10 +135,6 @@ function getLocalization() {
       en: "chat",
       ru: "чат"
     },
-    "captureAllFruits": {
-      en: "Whoever grabs the most fruits wins",
-      ru: "Победит тот, кто захватит больше всего фруктов"
-    },
     "enter-name": {
       en: "Enter a name (min: 4)",
       ru: "Введите имя (мин: 4)"

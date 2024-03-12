@@ -210,10 +210,6 @@ function processUserInfoOperation(data) {
   $("#userScore").text(localize('score') + ': ' + userInfo.score);
   $("#user-info-data").attr("data-original-title", concatGameStats(userInfo));
 
-  if (userInfo.wins < 5) {
-    $('#playContent').attr("data-original-title", localize("captureAllFruits"));
-  }
-
   $('[data-toggle="tooltip"]').tooltip();
 
   showMainWindow();
