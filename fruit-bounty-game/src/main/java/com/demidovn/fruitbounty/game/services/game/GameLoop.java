@@ -125,8 +125,8 @@ public class GameLoop {
 
       do {
         int matchesCount = cleanMatches(gameAction);
-        game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy()));
         currentPlayer.setPointsWhileGame(currentPlayer.getPointsWhileGame() + matchesCount);
+        game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy()));
 
         Game copiedState = game.deepCopy();
         DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
