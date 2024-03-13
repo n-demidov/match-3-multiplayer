@@ -18,6 +18,10 @@ public class Player {
   private int wins, defeats, draws;
   private String img;
 
+  // Only while game
+  private int movesInRound;
+  private int pointsWhileGame;
+
   @JsonIgnore
   private int consecutivelyMissedMoves;
 
@@ -36,6 +40,8 @@ public class Player {
         fromPlayer.getDefeats(),
         fromPlayer.getDraws(),
         fromPlayer.getImg(),
+        fromPlayer.getMovesInRound(),
+        fromPlayer.getPointsWhileGame(),
         fromPlayer.getConsecutivelyMissedMoves()
     );
   }

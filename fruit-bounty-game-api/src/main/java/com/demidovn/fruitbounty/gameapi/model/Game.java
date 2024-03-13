@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class Game {
   private Board board;
+  private int roundsNum;
+  private int currentRound;
   private int turnsCount;
   private boolean isTutorial;
   private List<Player> players;
@@ -42,6 +44,8 @@ public class Game {
 
     return new Game(
         new Board(copiedCells),
+        fromGame.roundsNum,
+        fromGame.currentRound,
         fromGame.turnsCount,
         fromGame.isTutorial,
         fromGame.players.stream().map(Player::copyPlayer).collect(Collectors.toList()),

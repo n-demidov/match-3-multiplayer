@@ -26,6 +26,14 @@ public class GameCreator {
     game.setAnimationTimerIntervalMs(ANIMATION_TIMER_INTERVAL_MS);
     game.setTutorial(isTutorial);
 
+    game.setRoundsNum(GameOptions.GAME_ROUNDS_NUM);
+    game.setCurrentRound(GameOptions.GAME_ROUNDS_FIRST);
+
+    players.forEach(p -> {
+      p.setMovesInRound(GameOptions.PLAYER_MOVES_PER_ROUND);
+      p.setPointsWhileGame(0);
+    });
+
     if (!game.isTutorial()) {
       randomlyMixPlayers(players);
     }

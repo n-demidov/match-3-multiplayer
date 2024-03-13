@@ -27,6 +27,12 @@ public class GameOptions {
   public static final int MOVE_TIME_DELAY_CORRECTION = 800;
   public static final int MAX_GAME_MISSED_MOVES = 3;
 
+  public static final int PLAYER_MOVES_PER_ROUND = 2;
+  public static final int GAME_ROUNDS_NUM = 3;
+  public static final int GAME_ROUNDS_FIRST = 1;
+  public static final int GAME_POINT_PER_MATCH = 1;
+  public static final int GAME_MATCHED_NUM_FOR_ADDITIONAL_MOVE = 4;
+
   public static final List<Integer> ALL_CELL_TYPES;
 
   static {
