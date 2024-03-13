@@ -25,7 +25,7 @@ public class GameOptions {
   public static final int TIME_PER_MOVE_MS = 1000 * 20;
   public static final int TUTORIAL_TIME_PER_MOVE_MS = 1000 * 60 * 3;
   public static final int MOVE_TIME_DELAY_CORRECTION = 800;
-  public static final int MAX_GAME_MISSED_MOVES = 3;
+  public static final int MAX_GAME_MISSED_MOVES = 999;
 
   public static final int PLAYER_MOVES_PER_ROUND = 2;
   public static final int GAME_ROUNDS_NUM = 3;
