@@ -54,4 +54,8 @@ public class Player {
     consecutivelyMissedMoves = 0;
   }
 
+  public void decreaseMovesInRound() {
+    movesInRound--;
+  }
+
 }

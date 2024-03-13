@@ -74,8 +74,8 @@ public class GameLoop {
 
     if (gameAction.getType() == GameActionType.Move) {
       processMoveAction(gameAction, context);
-    } else if (gameAction.getType() == GameActionType.Surrender) {
-      processSurrenderAction(gameAction, context);
+//    } else if (gameAction.getType() == GameActionType.Surrender) {
+//      processSurrenderAction(gameAction, context);
     } else {
       throw new IllegalArgumentException(String.format(
           "Unknown gameActionType=%s", gameAction.getType()));
@@ -115,15 +115,18 @@ public class GameLoop {
 
   private void processMoveAction(GameAction gameAction, GameProcessingContext context) {
     Game game = gameAction.getGame();
+    Player currentPlayer = game.getCurrentPlayer();
+
     if (gameRules.isMoveValid(gameAction)) {
-      game.getCurrentPlayer().resetConsecutivelyMissedMoves();
+      currentPlayer.resetConsecutivelyMissedMoves();
 
       swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
       game.getLastStories().add(gameStoryCreator.create(GameStoryType.SWIPE, game.deepCopy()));
 
       do {
-        cleanMatches(gameAction);
+        int matchesCount = cleanMatches(gameAction);
         game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy()));
+        currentPlayer.setPointsWhileGame(currentPlayer.getPointsWhileGame() + matchesCount);
 
         Game copiedState = game.deepCopy();
         DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
@@ -144,7 +147,7 @@ public class GameLoop {
         game.getLastStories().add(gameStoryCreator.create(GameStoryType.RECREATE_BOARD, copiedState));
       }
 
-//      gameRules.checkGameEndingByMoving(gameAction.getGame()); //todo
+      currentPlayer.decreaseMovesInRound();
       gameRules.switchCurrentPlayer(game);
 
       game.setTotalAnimationTimeMs(game.getLastStories().stream()
@@ -154,17 +157,13 @@ public class GameLoop {
     }
   }
 
-  private void processSurrenderAction(GameAction gameAction, GameProcessingContext context) {
-    playerSurrendered(gameAction.findActionedPlayer(), gameAction.getGame());
-
-    context.markGameChanged();
-  }
-
-  private void cleanMatches(GameAction gameAction) {
+  private int cleanMatches(GameAction gameAction) {
     Set<Cell> matches = matchesFinder.findMatches(gameAction.getGame().getBoard().getCells());
     for (Cell cell : matches) {
       cell.setCleared(true);
     }
+
+    return matches.size();
   }
 
   private int findRecreationDepth(List<Cell> specialCells) {
@@ -173,16 +172,6 @@ public class GameLoop {
         .collect(Collectors.groupingBy(Cell::getX, Collectors.counting()));
 
     return countsByX.values().stream().max(Long::compareTo).orElse(0L).intValue();
-  }
-
-  private void playerSurrendered(Player player, Game game) {
-    player.setSurrendered(true);
-
-    if (player.equals(game.getCurrentPlayer())) {
-      gameRules.switchCurrentPlayer(game);
-    }
-
-    gameRules.checkGameEndingBySurrendering(game);
   }
 
   private void checkForCurrentMoveExpiration(Game game, GameProcessingContext processContext) {
@@ -195,11 +184,7 @@ public class GameLoop {
 
       currentPlayer.incrementMissedMoves();
 
-      if (currentPlayer.getConsecutivelyMissedMoves() >= GameOptions.MAX_GAME_MISSED_MOVES) {
-        playerSurrendered(currentPlayer, game);
-      } else {
-        gameRules.switchCurrentPlayer(game);
-      }
+      gameRules.switchCurrentPlayer(game);
 
       processContext.markGameChanged();
     }

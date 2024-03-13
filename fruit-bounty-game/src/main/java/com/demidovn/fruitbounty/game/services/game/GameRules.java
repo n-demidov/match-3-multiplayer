@@ -3,7 +3,7 @@ package com.demidovn.fruitbounty.game.services.game;
 import com.demidovn.fruitbounty.game.services.game.rules.CaptureCellsLogic;
 import com.demidovn.fruitbounty.game.services.game.rules.CapturableCellsFinder;
 import com.demidovn.fruitbounty.game.services.game.rules.CurrentPlayerSwitch;
-import com.demidovn.fruitbounty.game.services.game.rules.ending.GameEndingByMoving;
+import com.demidovn.fruitbounty.game.services.game.rules.ending.GameEndingByAllRoundsCompleted;
 import com.demidovn.fruitbounty.game.services.game.rules.ending.GameEndingBySurrendering;
 import com.demidovn.fruitbounty.game.services.game.rules.MoveCorrectness;
 import com.demidovn.fruitbounty.gameapi.model.Cell;
@@ -17,7 +17,7 @@ public class GameRules {
   private final CapturableCellsFinder capturableCellsFinder = new CapturableCellsFinder();
   private final CaptureCellsLogic captureCellsLogic = new CaptureCellsLogic();
   private final GameEndingBySurrendering gameEndingBySurrendering = new GameEndingBySurrendering();
-  private final GameEndingByMoving gameEndingByMoving = new GameEndingByMoving();
+  private final GameEndingByAllRoundsCompleted gameEndingByAllRoundsCompleted = new GameEndingByAllRoundsCompleted();
   private final CurrentPlayerSwitch currentPlayerSwitch = new CurrentPlayerSwitch();
 
   public boolean isMoveValid(GameAction gameAction) {
@@ -40,8 +40,8 @@ public class GameRules {
     gameEndingBySurrendering.checkGameEndingBySurrendering(game);
   }
 
-  public void checkGameEndingByMoving(Game game) {
-    gameEndingByMoving.checkGameEndingByMoving(game);
+  public void finishGameByAllRoundsCompleted(Game game) {
+    gameEndingByAllRoundsCompleted.finishGameByAllRoundsCompleted(game);
   }
 
 }

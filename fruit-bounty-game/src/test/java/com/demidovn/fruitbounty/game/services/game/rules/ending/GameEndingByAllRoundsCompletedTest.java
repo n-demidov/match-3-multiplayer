@@ -12,14 +12,14 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-public class GameEndingByMovingTest {
+public class GameEndingByAllRoundsCompletedTest {
 
   private static final int DEFAULT_CELL_TYPE = 1;
   private static final int CELLS_WIDTH = 2, CELLS_HEIGHT = 2;
   private static final int FIRST_PLAYER_ID = 4, SECOND_PLAYER_ID = 5;
   private static final int EMPTY_CELL_PLAYER_ID = 0;
 
-  private GameEndingByMoving gameEndingByMoving = new GameEndingByMoving();
+  private GameEndingByAllRoundsCompleted gameEndingByAllRoundsCompleted = new GameEndingByAllRoundsCompleted();
 
   private Game game;
   private Player firstPlayer;
@@ -34,7 +34,7 @@ public class GameEndingByMovingTest {
   public void whenThereisEmptyCell() {
     game.getBoard().getCells()[0][1].setOwner(EMPTY_CELL_PLAYER_ID);
 
-    gameEndingByMoving.checkGameEndingByMoving(game);
+    gameEndingByAllRoundsCompleted.finishGameByAllRoundsCompleted(game);
 
     assertFalse(game.isFinished());
     assertThat(game.getWinner()).isNull();
@@ -42,7 +42,7 @@ public class GameEndingByMovingTest {
 
   @Test
   public void whenSecondPlayerHasMoreCells() {
-    gameEndingByMoving.checkGameEndingByMoving(game);
+    gameEndingByAllRoundsCompleted.finishGameByAllRoundsCompleted(game);
 
     assertTrue(game.isFinished());
     assertThat(game.getWinner()).isEqualTo(secondPlayer);
@@ -52,7 +52,7 @@ public class GameEndingByMovingTest {
   public void whenPlayersHasEqualsCellsCount() {
     game.getBoard().getCells()[0][1].setOwner(FIRST_PLAYER_ID);
 
-    gameEndingByMoving.checkGameEndingByMoving(game);
+    gameEndingByAllRoundsCompleted.finishGameByAllRoundsCompleted(game);
 
     assertTrue(game.isFinished());
     assertThat(game.getWinner()).isNull();
@@ -63,7 +63,7 @@ public class GameEndingByMovingTest {
     game.getPlayers().add(
       createPlayer(99));
 
-    gameEndingByMoving.checkGameEndingByMoving(game);
+    gameEndingByAllRoundsCompleted.finishGameByAllRoundsCompleted(game);
   }
 
   private Game createGame() {

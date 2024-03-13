@@ -22,14 +22,7 @@ public abstract class GameEnding {
     if (winner != null) {
       Player looser = findLooser(players, winner);
 
-      int winnerAddedScore;
-      if (game.isTutorial()) {
-        winnerAddedScore = GameOptions.SCORE_FOR_WIN_TUTORIAL_GAME;
-      } else {
-        winnerAddedScore = addedScoreCalculator.findWinnerAddedScore(winner, looser);
-      }
-
-      winner.setAddedScore(winnerAddedScore);
+      winner.setAddedScore(GameOptions.PLAYER_SCORE_PER_WIN);
       looser.setAddedScore(0);
     }
   }
