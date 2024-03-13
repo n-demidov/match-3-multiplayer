@@ -705,16 +705,14 @@ function paintWinner(game) {
     gameResult = "draw";
   }
 
-  // Cells count
-  var playerCellsCount = 0;
-  var opponentId = findOpponentId();
-  var opponentCellsCount = 0;
-  var text = playerCellsCount + "/" + opponentCellsCount;
+  // Points while game
+  var selfPlayer = findSelfPlayer();
+  var opponentPlayer = findOpponentPlayer();
+  var text = selfPlayer.pointsWhileGame + "/" + opponentPlayer.pointsWhileGame;
   $('#subwindow-cells').text(text);
 
   // Game points
-  var player = findSelfPlayer();
-  var addedScore = player.addedScore;
+  var addedScore = selfPlayer.addedScore;
   if (addedScore > -1) {
     addedScore = "+" + addedScore;
   }
@@ -873,6 +871,15 @@ function findOpponentId() {
 function findSelfPlayer() {
   // Works only for 2 players in game.
   if (game.players[0].id === userInfo.id) {
+    return game.players[0];
+  } else {
+    return game.players[1];
+  }
+}
+
+function findOpponentPlayer() {
+  // Works only for 2 players in game.
+  if (game.players[0].id === findOpponentId()) {
     return game.players[0];
   } else {
     return game.players[1];
