@@ -182,6 +182,7 @@ public class GameLoop {
     if (isCurrentMoveExpired(game)) {
       Player currentPlayer = game.getCurrentPlayer();
 
+      currentPlayer.setMovesInRound(0);
       currentPlayer.incrementMissedMoves();
 
       gameRules.switchCurrentPlayer(game);
