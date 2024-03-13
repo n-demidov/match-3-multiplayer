@@ -150,8 +150,10 @@ public class GameLoop {
       currentPlayer.decreaseMovesInRound();
       gameRules.switchCurrentPlayer(game);
 
-      game.setTotalAnimationTimeMs(game.getLastStories().stream()
-          .mapToInt(g -> g.getStoryIdxCounterMax() * game.getAnimationTimerIntervalMs()).sum());
+      int totalAnimationTimeMs = game.getLastStories().stream()
+          .mapToInt(g -> g.getStoryIdxCounterMax() * game.getAnimationTimerIntervalMs()).sum();
+      game.setTotalAnimationTimeMs(totalAnimationTimeMs);
+      game.setCurrentMoveStarted(game.getCurrentMoveStarted() + totalAnimationTimeMs);
 
       context.markGameChanged();
     }
