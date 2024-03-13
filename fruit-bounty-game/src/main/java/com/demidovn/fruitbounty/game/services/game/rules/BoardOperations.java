@@ -70,6 +70,17 @@ public class BoardOperations {
   }
 
   private int createRandomCellType() {
+    while (true) {
+      int randIdx = createRandomCellTypeInner();
+      if (randIdx == 3 || randIdx == 5 || randIdx == 9) {  // reduce to 6 items
+        continue;
+      }
+
+      return randIdx;
+    }
+  }
+
+  private int createRandomCellTypeInner() {
     return rand.nextInt(GameOptions.CELL_TYPES_COUNT) + 1;
   }
 
