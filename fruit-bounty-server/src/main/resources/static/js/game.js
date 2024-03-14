@@ -288,7 +288,8 @@ function gameBoardClicked(x, y) {
   }
 
   if (!areCellsNeighbors(point1, point2)) {
-    resetMove();
+    point1 = point2;
+    resetPoint2();
     return;
   }
 
@@ -309,7 +310,15 @@ function gameBoardClicked(x, y) {
 }
 
 function resetMove() {
+  resetPoint1();
+  resetPoint2();
+}
+
+function resetPoint1() {
   point1 = undefined;
+}
+
+function resetPoint2() {
   point2 = undefined;
 }
 
