@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -123,10 +125,15 @@ public class GameLoop {
       swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
       game.getLastStories().add(gameStoryCreator.create(GameStoryType.SWIPE, game.deepCopy()));
 
+      boolean wasExtraMove = false;
+      int counter = 0;
       do {
-        int matchesCount = cleanMatches(gameAction);
-        currentPlayer.setPointsWhileGame(currentPlayer.getPointsWhileGame() + matchesCount);
+        CleanMatchesResult matchesCountResult = cleanMatches(gameAction);
+        currentPlayer.setPointsWhileGame(currentPlayer.getPointsWhileGame() + matchesCountResult.allMatchesCount);
         game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy()));
+        if (counter == 0 && matchesCountResult.wasExtraMove) {
+          wasExtraMove = true;
+        }
 
         Game copiedState = game.deepCopy();
         DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
@@ -139,6 +146,7 @@ public class GameLoop {
         int recreationDepth = findRecreationDepth(createdCells);
         game.getLastStories().add(
             gameStoryCreator.create(GameStoryType.CREATED_CELLS, game.deepCopy(), createdCells, recreationDepth));
+        counter++;
       } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
 
       Game copiedState = game.deepCopy();
@@ -147,7 +155,9 @@ public class GameLoop {
         game.getLastStories().add(gameStoryCreator.create(GameStoryType.RECREATE_BOARD, copiedState));
       }
 
-      currentPlayer.decreaseMovesInRound();
+      if (!wasExtraMove) {
+        currentPlayer.decreaseMovesInRound();
+      }
       gameRules.switchCurrentPlayer(game);
 
       int totalAnimationTimeMs = game.getLastStories().stream()
@@ -159,13 +169,22 @@ public class GameLoop {
     }
   }
 
-  private int cleanMatches(GameAction gameAction) {
+  private CleanMatchesResult cleanMatches(GameAction gameAction) {
     Set<Cell> matches = matchesFinder.findMatches(gameAction.getGame().getBoard().getCells());
     for (Cell cell : matches) {
       cell.setCleared(true);
     }
 
-    return matches.size();
+    return new CleanMatchesResult(matches.size(), wasExtraMove(matches));
+  }
+
+  private boolean wasExtraMove(Set<Cell> matches) {
+    Map<Integer, Long> countsByType = matches.stream()
+        .collect(Collectors.groupingBy(Cell::getType, Collectors.counting()));
+    boolean wasExtraMove = countsByType.values().stream()
+        .anyMatch(v -> v >= GameOptions.GAME_MATCHED_NUM_FOR_ADDITIONAL_MOVE);
+
+    return wasExtraMove;
   }
 
   private int findRecreationDepth(List<Cell> specialCells) {
@@ -202,6 +221,14 @@ public class GameLoop {
     if (processContext.isGameChanged()) {
       gameEventsSubscriptions.notifyGameChanged(game);
     }
+  }
+
+  @AllArgsConstructor
+  @Getter
+  private static class CleanMatchesResult {
+    private int allMatchesCount;
+    private boolean wasExtraMove;
+
   }
 
 }
