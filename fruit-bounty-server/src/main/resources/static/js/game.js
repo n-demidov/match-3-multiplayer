@@ -332,6 +332,7 @@ function paintGame(game) {
     return;
   }
 
+  game = getActualGame();
   if (game.finished) {
     killGameTimer();
     gameWindowMayBeClosed = true;
@@ -340,7 +341,7 @@ function paintGame(game) {
 
   canvas.width = getCanvasWidth();
 
-  paintPlayers(getActualGame());
+  paintPlayers(game);
   paintBoard(game);
   // paintPossibleCellsAnimation(game);
   paintBoardGrid(game);
@@ -447,7 +448,7 @@ function incrementSwipeCellAnimation() {
 }
 
 
-function getActualGameStory(game) {
+function getActualGameStory() {
   if (game.lastStories.length === 0 ||
       story.storyIdx >= game.lastStories.length) {
     return {};  //todo: make empty?
