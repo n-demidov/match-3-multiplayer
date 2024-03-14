@@ -427,7 +427,7 @@ function resetSwipeCellAnimation(success, point1, point2) {
 }
 
 function incrementStoryIdx(game) {
-  var gameStory = getActualGameStory(game);
+  var gameStory = getActualGameStory();
 
   story.storyIdxCounter++;
   if (story.storyIdxCounter >= gameStory.storyIdxCounterMax) {
@@ -458,7 +458,7 @@ function getActualGameStory() {
 }
 
 function getActualGame() {
-  var gameStory = getActualGameStory(game);
+  var gameStory = getActualGameStory();
   if (isObjectEmpty(gameStory)) {
     return game;
   }
@@ -467,7 +467,7 @@ function getActualGame() {
 }
 
 function getActualBoard(game) {
-  var gameStory = getActualGameStory(game);
+  var gameStory = getActualGameStory();
 
   if (isObjectEmpty(gameStory)) {
     return game.board.cells;
@@ -531,7 +531,7 @@ function drawFruit(cell, game) {
   var x = cell.x * cellSize;
   var y = initY;
 
-  var gameStory = getActualGameStory(game);
+  var gameStory = getActualGameStory();
   if (swipeCellAnimation.enabled &&
       anyCoordsSame(cell, [swipeCellAnimation.point1, swipeCellAnimation.point2])) {
     if (swipeCellAnimation.success) {
@@ -755,7 +755,7 @@ function paintStrokedText(text, x, y) {
 }
 
 function paintShuffleText() {
-  var gameStory = getActualGameStory(game);
+  var gameStory = getActualGameStory();
   if (gameStory.type !== 'RECREATE_BOARD') {
     return;
   }
@@ -765,7 +765,7 @@ function paintShuffleText() {
 }
 
 function paintExtraMoveText() {
-  var gameStory = getActualGameStory(game);
+  var gameStory = getActualGameStory();
   if (!gameStory.extraMove) {
     return;
   }
