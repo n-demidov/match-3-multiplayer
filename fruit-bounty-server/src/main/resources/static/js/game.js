@@ -177,7 +177,7 @@ function processGameChangedOperation(newGame) {
   newGame.incomingTime = Date.now();
 
   resetStoryIdx();
-  resetMove();
+  resetSelectedCells();
   resetSwipeCellAnimation();
   resetPossibleCellsAnimation();
   paintGame(newGame);
@@ -306,10 +306,10 @@ function gameBoardClicked(x, y) {
     point2: point2
   };
   sendGameAction(movePayload);
-  resetMove();
+  resetSelectedCells();
 }
 
-function resetMove() {
+function resetSelectedCells() {
   resetPoint1();
   resetPoint2();
 }
