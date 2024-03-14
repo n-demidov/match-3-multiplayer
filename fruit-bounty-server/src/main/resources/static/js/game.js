@@ -345,8 +345,9 @@ function paintGame(game) {
   // paintPossibleCellsAnimation(game);
   paintBoardGrid(game);
   hideBoardIfOpponentTurn();
-  paintShuffleText();
   paintOpponentTurnText();
+  paintShuffleText();
+  paintExtraMoveText();
   paintWinner(game);
 }
 
@@ -759,6 +760,16 @@ function paintShuffleText() {
   }
 
   paintShortText(localize('noMoves'));
+  resetOpponentTurnAnimation();
+}
+
+function paintExtraMoveText() {
+  var gameStory = getActualGameStory(game);
+  if (!gameStory.extraMove) {
+    return;
+  }
+
+  paintShortText(localize('extraMove'));
   resetOpponentTurnAnimation();
 }
 

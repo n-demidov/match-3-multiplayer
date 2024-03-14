@@ -10,11 +10,19 @@ public class GameStory {
   private Game gameState;
   private List<Cell> specialCells;
   private int storyIdxCounterMax;
+  private boolean extraMove;
 
   public GameStory(GameStoryType type, Game game, int storyIdxCounterMax) {
     this.type = type;
     this.gameState = game;
     this.storyIdxCounterMax = storyIdxCounterMax;
+  }
+
+  public GameStory(GameStoryType type, Game game, int storyIdxCounterMax, boolean extraMove) {
+    this.type = type;
+    this.gameState = game;
+    this.storyIdxCounterMax = storyIdxCounterMax;
+    this.extraMove = extraMove;
   }
 
   public GameStory(GameStoryType type, Game game, int storyIdxCounterMax, List<Cell> specialCells) {

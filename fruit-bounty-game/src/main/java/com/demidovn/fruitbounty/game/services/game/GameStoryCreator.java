@@ -25,6 +25,10 @@ public class GameStoryCreator {
     return new GameStory(type, gameState, storyIdxCounterMaxs.get(type));
   }
 
+  public GameStory create(GameStoryType type, Game gameState, boolean extraMove) {
+    return new GameStory(type, gameState, storyIdxCounterMaxs.get(type), extraMove);
+  }
+
   public GameStory create(GameStoryType type, Game gameState, List<Cell> specialCells, int dropDepth) {
     if (!(type == GameStoryType.DROP_CELLS || type == GameStoryType.CREATED_CELLS)) {
       throw new UnsupportedOperationException();
