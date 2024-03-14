@@ -355,7 +355,10 @@ function paintGame(game) {
   paintBoardGrid(game);
   paintBoard(game);
   // paintPossibleCellsAnimation(game);
-  hideBoardIfOpponentTurn();
+  if (!isCurrentTurn(game)) {
+    hideBoard();
+    resetSelectedCells();
+  }
   paintOpponentTurnText();
   paintShuffleText();
   paintExtraMoveText();
@@ -686,13 +689,7 @@ function paintBoardGrid(game) {
   ctx.stroke();
 }
 
-function hideBoardIfOpponentTurn() {
-  var game = getActualGame();
-
-  if (isCurrentTurn(game)) {
-    return;
-  }
-
+function hideBoard() {
   darkenCells([], false, 0.2);
 }
 
