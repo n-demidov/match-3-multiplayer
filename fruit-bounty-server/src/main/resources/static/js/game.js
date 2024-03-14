@@ -342,9 +342,10 @@ function paintGame(game) {
   canvas.width = getCanvasWidth();
 
   paintPlayers(game);
+  paintBoardBackground();
+  paintBoardGrid(game);
   paintBoard(game);
   // paintPossibleCellsAnimation(game);
-  paintBoardGrid(game);
   hideBoardIfOpponentTurn();
   paintOpponentTurnText();
   paintShuffleText();
@@ -476,12 +477,13 @@ function getActualBoard(game) {
 }
 
 
-function paintBoard(game) {
-  // Fill background
+function paintBoardBackground() {
   ctx.fillStyle = "white";
   ctx.globalAlpha = 1;
   ctx.fillRect(BOARD_X, BOARD_Y, boardWidth, boardHeight);
+}
 
+function paintBoard(game) {
   var cells = getActualBoard(game);
 
   for (var x = 0; x < cells.length; x++) {
