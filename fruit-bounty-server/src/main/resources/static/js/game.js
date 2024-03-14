@@ -854,7 +854,7 @@ function findColumnDepth(cell, specialCells) {
 }
 
 function isCurrentTurn(game) {
-  return userInfo.id === game.currentPlayer.id;
+  return game.currentPlayer && userInfo.id === game.currentPlayer.id;
 }
 
 function findOpponentId() {
