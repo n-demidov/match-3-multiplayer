@@ -813,7 +813,7 @@ function paintOpponentTurnText() {
 function paintShortText(text) {
   var cells = game.board.cells;
   var centerX = cells[0].length * cellSize / 2;
-  var centerY = cells.length * cellSize / 2;
+  var centerY = cells.length * cellSize / 2 - cellSize / 2;
 
   paintTextFrame(centerY);
   paintStrokedText(text, centerX, centerY);
