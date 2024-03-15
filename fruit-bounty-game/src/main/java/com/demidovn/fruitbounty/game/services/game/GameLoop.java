@@ -134,7 +134,8 @@ public class GameLoop {
         if (counter == 0 && matchesCountResult.wasExtraMove) {
           wasExtraMove = true;
         }
-        game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy(), wasExtraMove));
+        boolean extraMoveOnFirstIteration = wasExtraMove && counter == 0;
+        game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy(), extraMoveOnFirstIteration));
 
         Game copiedState = game.deepCopy();
         DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
