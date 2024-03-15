@@ -752,17 +752,6 @@ function paintWinner(game) {
 }
 
 
-function paintStrokedText(text, x, y) {
-  ctx.textAlign = "center";
-  ctx.font = getCanvasTipsParams().fontSize + ' ' + fontsByLocale[browserLocale];
-  ctx.strokeStyle = 'black';
-  ctx.lineWidth = getCanvasTipsParams().lineWidth;
-  ctx.strokeText(text, x, y);
-
-  ctx.fillStyle = 'white';
-  ctx.fillText(text, x, y);
-}
-
 function paintPlayerChangedText() {
   var gameStory = getActualGameStory();
   if (gameStory.type !== 'PLAYER_CHANGED') {
@@ -826,7 +815,28 @@ function paintShortText(text) {
   var centerX = cells[0].length * cellSize / 2;
   var centerY = cells.length * cellSize / 2;
 
+  paintTextFrame(centerY);
   paintStrokedText(text, centerX, centerY);
+}
+
+function paintTextFrame(y) {
+  var opacity = 0.6;
+  var rowHeight = cellSize;
+  var yMargin = cellSize;
+
+  ctx.fillStyle = "rgba(0, 0, 0, " + opacity + ")";
+  ctx.fillRect(0, y - rowHeight, getCanvasWidth(), rowHeight + yMargin * 2/3);
+}
+
+function paintStrokedText(text, x, y) {
+  ctx.textAlign = "center";
+  ctx.font = getCanvasTipsParams().fontSize + ' ' + fontsByLocale[browserLocale];
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = getCanvasTipsParams().lineWidth;
+  ctx.strokeText(text, x, y);
+
+  ctx.fillStyle = 'white';
+  ctx.fillText(text, x, y);
 }
 
 function darkenCells(exceptCells, excludeCapturedCells, opacity) {
