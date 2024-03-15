@@ -124,8 +124,8 @@ function getLocalization() {
       ru: "Закончились ходы"
     },
     "extraMove": {
-      en: "Extra Move",
-      ru: "+1 ход"
+      en: "Extra Move!",
+      ru: "+1 ход!"
     },
     "finalRound": {
       en: "Final round",
