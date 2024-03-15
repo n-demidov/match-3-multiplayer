@@ -160,8 +160,7 @@ public class GameLoop {
       }
       gameRules.switchCurrentPlayer(game);
 
-      int totalAnimationTimeMs = game.getLastStories().stream()
-          .mapToInt(g -> g.getStoryIdxCounterMax() * game.getAnimationTimerIntervalMs()).sum();
+      int totalAnimationTimeMs = sumTotalAnimationTime(game);
       game.setTotalAnimationTimeMs(totalAnimationTimeMs);
       game.setCurrentMoveStarted(game.getCurrentMoveStarted() + totalAnimationTimeMs);
 
@@ -185,6 +184,11 @@ public class GameLoop {
         .anyMatch(v -> v >= GameOptions.GAME_MATCHED_NUM_FOR_ADDITIONAL_MOVE);
 
     return wasExtraMove;
+  }
+
+  private int sumTotalAnimationTime(Game game) {
+    return game.getLastStories().stream()
+        .mapToInt(g -> g.getStoryIdxCounterMax() * game.getAnimationTimerIntervalMs()).sum();
   }
 
   private int findRecreationDepth(List<Cell> specialCells) {
