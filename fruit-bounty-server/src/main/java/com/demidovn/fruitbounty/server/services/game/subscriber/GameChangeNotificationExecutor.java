@@ -64,8 +64,6 @@ public class GameChangeNotificationExecutor implements Runnable {
     }
 
     notifyGameServiceIfFinished();
-
-    game.getLastStories().clear(); //todo: Extract to Game-project?
   }
 
   private void updateUserIfFinished(Player player) {

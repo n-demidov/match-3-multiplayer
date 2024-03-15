@@ -122,6 +122,7 @@ public class GameLoop {
 
     if (gameRules.isMoveValid(gameAction)) {
       currentPlayer.resetConsecutivelyMissedMoves();
+      game.getLastStories().clear();
 
       swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
       game.getLastStories().add(gameStoryCreator.create(GameStoryType.SWIPE, game.deepCopy()));
