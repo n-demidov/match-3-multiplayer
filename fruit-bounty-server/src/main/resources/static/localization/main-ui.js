@@ -119,10 +119,6 @@ function getLocalization() {
       en: "Fruit is occupied by opponent",
       ru: "Фрукт занят оппонентом"
     },
-    "opponentTurn": {
-      en: "Opponent's turn",
-      ru: "Ход соперника"
-    },
     "noMoves": {
       en: "No moves",
       ru: "Закончились ходы"
@@ -130,6 +126,22 @@ function getLocalization() {
     "extraMove": {
       en: "Extra Move",
       ru: "+1 ход"
+    },
+    "finalRound": {
+      en: "Final round",
+      ru: "Финальный раунд"
+    },
+    "round": {
+      en: "Round",
+      ru: "Раунд"
+    },
+    "yourTurn": {
+      en: "Your turn",
+      ru: "Ваш ход"
+    },
+    "opponentTurn": {
+      en: "Opponent's turn",
+      ru: "Ход соперника"
     },
     "mobile-layout": {
       en: "Please, flip your device horizontally.",

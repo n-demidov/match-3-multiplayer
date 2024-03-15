@@ -770,22 +770,18 @@ function paintPlayerChangedText() {
   }
 
   var s = '';
-
-  // todo: localize
-  // paintShortText(localize('noMoves'));
-
   if (gameStory.newRound) {
     if (game.currentRound === game.roundsNum) {
-      s += 'Финальный раунд';
+      s += localize('finalRound');
     } else {
-      s += 'Раунд ' + game.currentRound;
+      s += localize('round') + ' ' + game.currentRound;
     }
   }
 
   if (isCurrentTurn(game)) {
-    s += 'Ваш ход';
+    s += localize('yourTurn');
   } else {
-    s += 'Ход соперника';
+    s += localize('opponentTurn');
   }
 
   paintShortText(s);
