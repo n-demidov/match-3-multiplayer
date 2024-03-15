@@ -13,7 +13,6 @@ import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import com.demidovn.fruitbounty.gameapi.model.GameActionType;
-import com.demidovn.fruitbounty.gameapi.model.GameStory;
 import com.demidovn.fruitbounty.gameapi.model.GameStoryType;
 import com.demidovn.fruitbounty.gameapi.model.Player;
 import com.demidovn.fruitbounty.gameapi.services.BotService;
@@ -118,6 +117,8 @@ public class GameLoop {
   private void processMoveAction(GameAction gameAction, GameProcessingContext context) {
     Game game = gameAction.getGame();
     Player currentPlayer = game.getCurrentPlayer();
+    int oldGameRound = game.getCurrentRound();
+    Player oldCurrentPlayer = game.getCurrentPlayer();
 
     if (gameRules.isMoveValid(gameAction)) {
       currentPlayer.resetConsecutivelyMissedMoves();
@@ -159,6 +160,12 @@ public class GameLoop {
         currentPlayer.decreaseMovesInRound();
       }
       gameRules.switchCurrentPlayer(game);
+
+      if (!oldCurrentPlayer.equals(game.getCurrentPlayer())) {
+        boolean newRound = oldGameRound != game.getCurrentRound();
+        game.getLastStories().add(gameStoryCreator.createPlayerChanged(
+            GameStoryType.PLAYER_CHANGED, game.deepCopy(), newRound));
+      }
 
       int totalAnimationTimeMs = sumTotalAnimationTime(game);
       game.setTotalAnimationTimeMs(totalAnimationTimeMs);

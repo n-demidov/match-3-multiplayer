@@ -3,20 +3,26 @@ package com.demidovn.fruitbounty.game.services.game.generating;
 import static com.demidovn.fruitbounty.game.GameOptions.ANIMATION_TIMER_INTERVAL_MS;
 
 import com.demidovn.fruitbounty.game.GameOptions;
+import com.demidovn.fruitbounty.game.services.game.GameStoryCreator;
 import com.demidovn.fruitbounty.game.services.game.rules.BoardOperations;
 import com.demidovn.fruitbounty.gameapi.model.Board;
 import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
+import com.demidovn.fruitbounty.gameapi.model.GameStoryType;
 import com.demidovn.fruitbounty.gameapi.model.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class GameCreator {
+
+  @Autowired
+  private GameStoryCreator gameStoryCreator;
 
   private final Random rand = new Random();
   private final BoardOperations boardOperations = new BoardOperations();
@@ -42,6 +48,9 @@ public class GameCreator {
 
     game.setBoard(createBoard(game));
     changeBoardIfTutorial(game);
+
+    game.getLastStories().add(
+        gameStoryCreator.createPlayerChanged(GameStoryType.PLAYER_CHANGED, game.deepCopy(), true));
 
     return game;
   }

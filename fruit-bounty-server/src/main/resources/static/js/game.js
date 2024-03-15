@@ -360,6 +360,7 @@ function paintGame(game) {
     resetSelectedCells();
   }
   paintOpponentTurnText();
+  paintPlayerChangedText();
   paintShuffleText();
   paintExtraMoveText();
   paintWinner(game);
@@ -760,6 +761,35 @@ function paintStrokedText(text, x, y) {
 
   ctx.fillStyle = 'white';
   ctx.fillText(text, x, y);
+}
+
+function paintPlayerChangedText() {
+  var gameStory = getActualGameStory();
+  if (gameStory.type !== 'PLAYER_CHANGED') {
+    return;
+  }
+
+  var s = '';
+
+  // todo: localize
+  // paintShortText(localize('noMoves'));
+
+  if (gameStory.newRound) {
+    if (game.currentRound === game.roundsNum) {
+      s += 'Финальный раунд';
+    } else {
+      s += 'Раунд ' + game.currentRound;
+    }
+  }
+
+  if (isCurrentTurn(game)) {
+    s += 'Ваш ход';
+  } else {
+    s += 'Ход соперника';
+  }
+
+  paintShortText(s);
+  resetOpponentTurnAnimation();
 }
 
 function paintShuffleText() {

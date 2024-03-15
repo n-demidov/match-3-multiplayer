@@ -19,6 +19,7 @@ public class GameStoryCreator {
     storyIdxCounterMaxs.put(GameStoryType.SWIPE, STANDARD_ANIMATION_ITER);
     storyIdxCounterMaxs.put(GameStoryType.MATCH, STANDARD_ANIMATION_ITER);
     storyIdxCounterMaxs.put(GameStoryType.RECREATE_BOARD, STANDARD_ANIMATION_ITER * 5);
+    storyIdxCounterMaxs.put(GameStoryType.PLAYER_CHANGED, STANDARD_ANIMATION_ITER * 3);
   }
 
   public GameStory create(GameStoryType type, Game gameState) {
@@ -27,6 +28,12 @@ public class GameStoryCreator {
 
   public GameStory create(GameStoryType type, Game gameState, boolean extraMove) {
     return new GameStory(type, gameState, storyIdxCounterMaxs.get(type), extraMove);
+  }
+
+  public GameStory createPlayerChanged(GameStoryType type, Game gameState, boolean newRound) {
+    GameStory gameStory = new GameStory(type, gameState, storyIdxCounterMaxs.get(type));
+    gameStory.setNewRound(newRound);
+    return gameStory;
   }
 
   public GameStory create(GameStoryType type, Game gameState, List<Cell> specialCells, int dropDepth) {

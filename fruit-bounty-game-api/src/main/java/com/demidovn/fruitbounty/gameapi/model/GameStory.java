@@ -12,6 +12,8 @@ public class GameStory {
   private int storyIdxCounterMax;
   private boolean extraMove;
 
+  private boolean newRound; // For 'GameStoryType.PLAYER_CHANGED' state
+
   public GameStory(GameStoryType type, Game game, int storyIdxCounterMax) {
     this.type = type;
     this.gameState = game;
