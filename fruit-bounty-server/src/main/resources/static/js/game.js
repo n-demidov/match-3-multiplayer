@@ -819,24 +819,24 @@ function paintShortText(text) {
   paintStrokedText(text, centerX, centerY);
 }
 
-function paintTextFrame(centerY) {
+function paintTextFrame(y) {
   var opacity = 0.6;
   var rowHeight = cellSize;
   var yMargin = cellSize;
 
   ctx.fillStyle = "rgba(0, 0, 0, " + opacity + ")";
-  ctx.fillRect(0, centerY - rowHeight, getCanvasWidth(), rowHeight + yMargin * 2/3);
+  ctx.fillRect(0, y - rowHeight, getCanvasWidth(), rowHeight + yMargin * 2/3);
 }
 
-function paintStrokedText(text, centerX, centerY) {
+function paintStrokedText(text, x, y) {
   ctx.textAlign = "center";
   ctx.font = getCanvasTipsParams().fontSize + ' ' + fontsByLocale[browserLocale];
   ctx.strokeStyle = 'black';
   ctx.lineWidth = getCanvasTipsParams().lineWidth;
-  ctx.strokeText(text, centerX, centerY);
+  ctx.strokeText(text, x, y);
 
   ctx.fillStyle = 'white';
-  ctx.fillText(text, centerX, centerY);
+  ctx.fillText(text, x, y);
 }
 
 function darkenCells(exceptCells, excludeCapturedCells, opacity) {
