@@ -115,66 +115,68 @@ public class GameLoop {
   }
 
   private void processMoveAction(GameAction gameAction, GameProcessingContext context) {
+    if (!gameRules.isMoveValid(gameAction)) {
+      return;
+    }
+
     Game game = gameAction.getGame();
     Player currentPlayer = game.getCurrentPlayer();
     int oldGameRound = game.getCurrentRound();
     Player oldCurrentPlayer = game.getCurrentPlayer();
 
-    if (gameRules.isMoveValid(gameAction)) {
-      currentPlayer.resetConsecutivelyMissedMoves();
-      game.getLastStories().clear();
+    currentPlayer.resetConsecutivelyMissedMoves();
+    game.getLastStories().clear();
 
-      swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
-      game.getLastStories().add(gameStoryCreator.create(GameStoryType.SWIPE, game.deepCopy()));
+    swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
+    game.getLastStories().add(gameStoryCreator.create(GameStoryType.SWIPE, game.deepCopy()));
 
-      boolean wasExtraMove = false;
-      int counter = 0;
-      do {
-        CleanMatchesResult matchesCountResult = cleanMatches(gameAction);
-        currentPlayer.setPointsWhileGame(currentPlayer.getPointsWhileGame() + matchesCountResult.allMatchesCount);
-        if (counter == 0 && matchesCountResult.wasExtraMove) {
-          wasExtraMove = true;
-        }
-        boolean extraMoveOnFirstIteration = wasExtraMove && counter == 0;
-        game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy(), extraMoveOnFirstIteration));
-
-        Game copiedState = game.deepCopy();
-        DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
-        if (droppedResult.droppedCells.size() > 0) {
-          game.getLastStories().add(
-              gameStoryCreator.create(GameStoryType.DROP_CELLS, copiedState, droppedResult.droppedCells, droppedResult.dropDepthMax));
-        }
-
-        List<Cell> createdCells = boardOperations.recreateClearedCells(game.getBoard().getCells());
-        int recreationDepth = findRecreationDepth(createdCells);
-        game.getLastStories().add(
-            gameStoryCreator.create(GameStoryType.CREATED_CELLS, game.deepCopy(), createdCells, recreationDepth));
-        counter++;
-      } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
+    boolean wasExtraMove = false;
+    int counter = 0;
+    do {
+      CleanMatchesResult matchesCountResult = cleanMatches(gameAction);
+      currentPlayer.setPointsWhileGame(currentPlayer.getPointsWhileGame() + matchesCountResult.allMatchesCount);
+      if (counter == 0 && matchesCountResult.wasExtraMove) {
+        wasExtraMove = true;
+      }
+      boolean extraMoveOnFirstIteration = wasExtraMove && counter == 0;
+      game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy(), extraMoveOnFirstIteration));
 
       Game copiedState = game.deepCopy();
-      boolean updated = boardOperations.recreateCellsIfNoMoves(game.getBoard());
-      if (updated) {
-        game.getLastStories().add(gameStoryCreator.create(GameStoryType.RECREATE_BOARD, copiedState));
+      DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
+      if (droppedResult.droppedCells.size() > 0) {
+        game.getLastStories().add(
+            gameStoryCreator.create(GameStoryType.DROP_CELLS, copiedState, droppedResult.droppedCells, droppedResult.dropDepthMax));
       }
 
-      if (!wasExtraMove) {
-        currentPlayer.decreaseMovesInRound();
-      }
-      gameRules.switchCurrentPlayer(game);
+      List<Cell> createdCells = boardOperations.recreateClearedCells(game.getBoard().getCells());
+      int recreationDepth = findRecreationDepth(createdCells);
+      game.getLastStories().add(
+          gameStoryCreator.create(GameStoryType.CREATED_CELLS, game.deepCopy(), createdCells, recreationDepth));
+      counter++;
+    } while (!matchesFinder.findMatches(gameAction.getGame().getBoard().getCells()).isEmpty());
 
-      if (!oldCurrentPlayer.equals(game.getCurrentPlayer())) {
-        boolean newRound = oldGameRound != game.getCurrentRound();
-        game.getLastStories().add(gameStoryCreator.createPlayerChanged(
-            GameStoryType.PLAYER_CHANGED, game.deepCopy(), newRound));
-      }
-
-      int totalAnimationTimeMs = sumTotalAnimationTime(game);
-      game.setTotalAnimationTimeMs(totalAnimationTimeMs);
-      game.setCurrentMoveStarted(game.getCurrentMoveStarted() + totalAnimationTimeMs);
-
-      context.markGameChanged();
+    Game copiedState = game.deepCopy();
+    boolean updated = boardOperations.recreateCellsIfNoMoves(game.getBoard());
+    if (updated) {
+      game.getLastStories().add(gameStoryCreator.create(GameStoryType.RECREATE_BOARD, copiedState));
     }
+
+    if (!wasExtraMove) {
+      currentPlayer.decreaseMovesInRound();
+    }
+    gameRules.switchCurrentPlayer(game);
+
+    if (!oldCurrentPlayer.equals(game.getCurrentPlayer())) {
+      boolean newRound = oldGameRound != game.getCurrentRound();
+      game.getLastStories().add(gameStoryCreator.createPlayerChanged(
+          GameStoryType.PLAYER_CHANGED, game.deepCopy(), newRound));
+    }
+
+    int totalAnimationTimeMs = sumTotalAnimationTime(game);
+    game.setTotalAnimationTimeMs(totalAnimationTimeMs);
+    game.setCurrentMoveStarted(game.getCurrentMoveStarted() + totalAnimationTimeMs);
+
+    context.markGameChanged();
   }
 
   private CleanMatchesResult cleanMatches(GameAction gameAction) {
