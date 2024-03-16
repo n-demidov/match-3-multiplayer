@@ -86,7 +86,7 @@ public class Game {
 
   public void updateMoveStartedTimes() {
     this.totalAnimationTimeMs = getTotalAnimationTime();
-    currentMoveStarted = getCurrentMoveStarted() + totalAnimationTimeMs;
+    currentMoveStarted = currentMoveStarted + totalAnimationTimeMs;
     lastAnyMoveStarted = Instant.now().toEpochMilli() + totalAnimationTimeMs;
   }
 
