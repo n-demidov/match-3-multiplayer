@@ -12,6 +12,10 @@ public class Randomizer {
         return random.nextInt(upperRange);
     }
 
+    /**
+     * @param min - inclusive in range
+     * @param max - inclusive in range
+     */
     public int generateFromRange(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }

@@ -8,6 +8,7 @@ import com.demidovn.fruitbounty.game.services.game.rules.Swiper;
 import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.Point;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +26,7 @@ public class Level1SimpleMovementToCenterMoveFinder {
   public Pair<Point, Point> findMove(Game game) {
     Cell[][] cells = game.getBoard().getCells();
 
+    List<Pair<Point, Point>> foundMoves = new ArrayList<>();
     for (int x = 0; x < cells.length; x ++) {
       for (int y = 0; y < cells[x].length; y ++) {
         Cell cell = cells[x][y];
@@ -38,10 +40,16 @@ public class Level1SimpleMovementToCenterMoveFinder {
           swiper.swipe(copiedCells, point1, point2);
 
           if (!matchesFinder.findMatches(copiedCells).isEmpty()) {
-            return new Pair<>(point1, point2);
+            foundMoves.add(new Pair<>(point1, point2));
           }
         }
       }
+    }
+
+    // Returns random move
+    if (!foundMoves.isEmpty()) {
+      int randomIdx = randomizer.generateFromRange(0, foundMoves.size() - 1);
+      return foundMoves.get(randomIdx);
     }
 
     String errMsg = String.format(CAN_NOT_FIND_ANY_MOVE_FOR_BOT_GAME, game.toFullString());

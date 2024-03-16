@@ -47,9 +47,13 @@ public class DefaultBotService implements BotService {
   @PostConstruct
   public void init() {
     botMoversById.put(-1L, new L1BotMover());
-    botMoversById.put(-2L, new L2BotMover(0));
-    botMoversById.put(-3L, new L2BotMover(2));
-    botMoversById.put(-4L, new L2BotMover(4));
+    botMoversById.put(-2L, new L1BotMover());
+    botMoversById.put(-3L, new L1BotMover());
+    botMoversById.put(-4L, new L1BotMover());
+
+//    botMoversById.put(-2L, new L2BotMover(0));
+//    botMoversById.put(-3L, new L2BotMover(2));
+//    botMoversById.put(-4L, new L2BotMover(4));
 
     botScoreById.put(-1L, new Pair<>(1, 99));
     botScoreById.put(-2L, new Pair<>(100, 199));
