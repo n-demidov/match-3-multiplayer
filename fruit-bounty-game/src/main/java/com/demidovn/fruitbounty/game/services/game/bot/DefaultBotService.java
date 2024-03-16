@@ -6,7 +6,6 @@ import com.demidovn.fruitbounty.game.model.Pair;
 import com.demidovn.fruitbounty.game.services.Randomizer;
 import com.demidovn.fruitbounty.game.services.game.bot.level.BotMover;
 import com.demidovn.fruitbounty.game.services.game.bot.level.L1BotMover;
-import com.demidovn.fruitbounty.game.services.game.bot.level.L2BotMover;
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.Player;
 import com.demidovn.fruitbounty.gameapi.model.Point;
@@ -131,8 +130,8 @@ public class DefaultBotService implements BotService {
   }
 
   private boolean isWaitEnoughTime(Game game) {
-    return Instant.now().toEpochMilli() - game.getCurrentMoveStarted()
-        > BOT_WAITING_MOVE_TIME + game.getTotalAnimationTimeMs();
+    return Instant.now().toEpochMilli() - game.getLastAnyMoveStarted()
+        > BOT_WAITING_MOVE_TIME;
   }
 
   private long getBotId(int playerScore) {

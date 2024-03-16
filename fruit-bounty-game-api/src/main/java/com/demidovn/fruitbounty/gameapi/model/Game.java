@@ -27,6 +27,8 @@ public class Game {
   private long timePerMoveMs;
   @JsonIgnore
   private long currentMoveStarted;
+  @JsonIgnore
+  private long lastAnyMoveStarted;
   private long clientCurrentMoveTimeLeft;  // Only for client
 
   private boolean isFinished;
@@ -52,6 +54,7 @@ public class Game {
         Player.copyPlayer(fromGame.currentPlayer),
         fromGame.timePerMoveMs,
         fromGame.currentMoveStarted,
+        fromGame.lastAnyMoveStarted,
         fromGame.clientCurrentMoveTimeLeft,
         fromGame.isFinished,
         Player.copyPlayer(fromGame.winner),
@@ -79,6 +82,15 @@ public class Game {
     this.currentPlayer = player;
     this.currentMoveStarted = Instant.now().toEpochMilli();
     turnsCount++;
+  }
+
+  public int getTotalAnimationTime(Game game) {
+    return game.getLastStories().stream()
+        .mapToInt(g -> g.getStoryIdxCounterMax() * game.getAnimationTimerIntervalMs()).sum();
+  }
+
+  public void updateLastAnyMoveStarted() {
+    lastAnyMoveStarted = Instant.now().toEpochMilli() + totalAnimationTimeMs;
   }
 
   public Player findPlayer(long playerId) {
