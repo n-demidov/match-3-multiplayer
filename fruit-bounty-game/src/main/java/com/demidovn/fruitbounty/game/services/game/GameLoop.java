@@ -172,10 +172,7 @@ public class GameLoop {
           GameStoryType.PLAYER_CHANGED, game.deepCopy(), newRound));
     }
 
-    int totalAnimationTimeMs = game.getTotalAnimationTime(game);
-    game.setTotalAnimationTimeMs(totalAnimationTimeMs);
-    game.setCurrentMoveStarted(game.getCurrentMoveStarted() + totalAnimationTimeMs);
-    game.updateLastAnyMoveStarted();
+    game.updateMoveStartedTimes();
 
     context.markGameChanged();
   }

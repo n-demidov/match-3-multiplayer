@@ -52,10 +52,7 @@ public class GameCreator {
     game.getLastStories().add(
         gameStoryCreator.createPlayerChanged(GameStoryType.PLAYER_CHANGED, game.deepCopy(), true));
 
-    int totalAnimationTimeMs = game.getTotalAnimationTime(game);
-    game.setTotalAnimationTimeMs(totalAnimationTimeMs);
-    game.setCurrentMoveStarted(game.getCurrentMoveStarted() + totalAnimationTimeMs);
-    game.updateLastAnyMoveStarted();
+    game.updateMoveStartedTimes();
 
     return game;
   }

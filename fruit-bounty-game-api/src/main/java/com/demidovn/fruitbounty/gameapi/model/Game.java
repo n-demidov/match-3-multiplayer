@@ -84,13 +84,15 @@ public class Game {
     turnsCount++;
   }
 
-  public int getTotalAnimationTime(Game game) {
-    return game.getLastStories().stream()
-        .mapToInt(g -> g.getStoryIdxCounterMax() * game.getAnimationTimerIntervalMs()).sum();
+  public void updateMoveStartedTimes() {
+    this.totalAnimationTimeMs = getTotalAnimationTime();
+    currentMoveStarted = getCurrentMoveStarted() + totalAnimationTimeMs;
+    lastAnyMoveStarted = Instant.now().toEpochMilli() + totalAnimationTimeMs;
   }
 
-  public void updateLastAnyMoveStarted() {
-    lastAnyMoveStarted = Instant.now().toEpochMilli() + totalAnimationTimeMs;
+  private int getTotalAnimationTime() {
+    return getLastStories().stream()
+        .mapToInt(g -> g.getStoryIdxCounterMax() * getAnimationTimerIntervalMs()).sum();
   }
 
   public Player findPlayer(long playerId) {
