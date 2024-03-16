@@ -21,7 +21,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultBotService implements BotService {
 
-  private static final int BOT_WAITING_MOVE_TIME = 1300;
+  private static final int MIN_BOT_WAITING_MOVE_TIME = 1400;
+  private static final int MAX_BOT_WAITING_MOVE_TIME = 4000;
   private static final int MAX_BOT_WINS = 10;
   private static final int MIN_BOT_DEFEATS = 20;
   private static final int MAX_BOT_DEFEATS = 100;
@@ -32,9 +33,9 @@ public class DefaultBotService implements BotService {
   private static final int TRAINER_DEFEATS = 1_000;
   private static final int TRAINER_DRAWS = 100;
 
+  private final Randomizer randomizer = new Randomizer();
   private final Random rand = new Random();
   private final MoveActionConverter moveActionConverter = new MoveActionConverter();
-  private final Randomizer randomizer = new Randomizer();
 
   @Autowired
   private BotNameGenerator botNameGenerator;
@@ -131,7 +132,11 @@ public class DefaultBotService implements BotService {
 
   private boolean isWaitEnoughTime(Game game) {
     return Instant.now().toEpochMilli() - game.getLastAnyMoveStarted()
-        > BOT_WAITING_MOVE_TIME;
+        > getBotWaiting();
+  }
+
+  private int getBotWaiting() {
+    return randomizer.generateFromRange(MIN_BOT_WAITING_MOVE_TIME, MAX_BOT_WAITING_MOVE_TIME);
   }
 
   private long getBotId(int playerScore) {
