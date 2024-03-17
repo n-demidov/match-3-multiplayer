@@ -404,9 +404,16 @@ function paintPlayer(player, game, playerSide) {
   }
 
   // Other player's params
-  // $('#' + playerSide + '-pl-score').text(localize("score") + ": " + player.score);
   $('#' + playerSide + '-pl-score').text(player.pointsWhileGame);
-  $('#' + playerSide + '-pl-moves').text(player.movesInRound);
+
+  var movesLeft = '';
+  if (player.movesInRound === 2) {
+    movesLeft = '| |';
+  } else if (player.movesInRound === 1) {
+    movesLeft = '|';
+  }
+
+  $('#' + playerSide + '-pl-moves').text(movesLeft);
   $('#' + playerSide + '-pl-info').attr("data-original-title", concatGameStats(player));
 
   // If game is going on
