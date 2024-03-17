@@ -761,22 +761,28 @@ function paintPlayerChangedText() {
     return;
   }
 
-  var s = '';
+  var s1;
   if (gameStory.newRound) {
     if (game.currentRound === game.roundsNum) {
-      s += localize('finalRound');
+      s1 = localize('finalRound');
     } else {
-      s += localize('round') + ' ' + game.currentRound;
+      s1 = localize('round') + ' ' + game.currentRound;
     }
   }
 
+  var s2;
   if (isCurrentTurn(game)) {
-    s += localize('yourTurn');
+    s2 = localize('yourTurn');
   } else {
-    s += localize('opponentTurn');
+    s2 = localize('opponentTurn');
   }
 
-  paintShortText(s);
+  if (s1 === undefined) {
+    paintShortText(s2);
+  } else {
+    paintShortText(s1, s2);
+  }
+
   resetAnimatedText();
 }
 
@@ -817,22 +823,35 @@ function paintAnimatedText() {
   paintShortText(animation.animatedTextValue);
 }
 
-function paintShortText(text) {
+function paintShortText(text, text2) {
+  var twoLines = text2 !== undefined;
+  var yMargin = cellSize;
+
   var cells = game.board.cells;
   var centerX = cells[0].length * cellSize / 2;
   var centerY = cells.length * cellSize / 2 - cellSize / 2;
 
-  paintTextFrame(centerY);
-  paintStrokedText(text, centerX, centerY);
+  if (twoLines) {
+    paintTextFrame(centerY, yMargin, 2);
+  } else {
+    paintTextFrame(centerY, yMargin, 1);
+  }
+
+  if (twoLines) {
+    paintStrokedText(text, centerX, centerY - yMargin / 2);
+    paintStrokedText(text2, centerX, centerY + yMargin / 2);
+  } else {
+    paintStrokedText(text, centerX, centerY);
+  }
 }
 
-function paintTextFrame(y) {
+function paintTextFrame(y, yMargin, linesNum) {
   var opacity = 0.6;
-  var rowHeight = cellSize;
-  var yMargin = cellSize;
+  var rowHeight = yMargin;
 
   ctx.fillStyle = "rgba(0, 0, 0, " + opacity + ")";
-  ctx.fillRect(0, y - rowHeight, getCanvasWidth(), rowHeight + yMargin * 2/3);
+  var y2LineMargin = yMargin * (linesNum - 1) / 2;
+  ctx.fillRect(0, y - rowHeight - y2LineMargin, getCanvasWidth(), rowHeight + yMargin * 2/3 + y2LineMargin * 2);
 }
 
 function paintStrokedText(text, x, y) {
