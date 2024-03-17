@@ -19,8 +19,8 @@ public class GameStoryCreator {
   static {
     storyIdxCounterMaxs.put(GameStoryType.SWIPE, STANDARD_ANIMATION_ITER);
     storyIdxCounterMaxs.put(GameStoryType.MATCH, STANDARD_ANIMATION_ITER);
-    storyIdxCounterMaxs.put(GameStoryType.RECREATE_BOARD, STANDARD_ANIMATION_ITER * 6);
-    storyIdxCounterMaxs.put(GameStoryType.PLAYER_CHANGED, STANDARD_ANIMATION_ITER * 6);
+    storyIdxCounterMaxs.put(GameStoryType.RECREATE_BOARD, STANDARD_ANIMATION_ITER * 7);
+    storyIdxCounterMaxs.put(GameStoryType.PLAYER_CHANGED, STANDARD_ANIMATION_ITER * 7);
   }
 
   public GameStory create(GameStoryType type, Game gameState) {
