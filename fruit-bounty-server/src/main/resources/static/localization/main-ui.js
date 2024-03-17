@@ -38,6 +38,11 @@ function getLocalization() {
       en: enRulesHtml,
       ru: ruRulesHtml
     },
+    "captionCurrentRound": {
+      selector: "#captionCurrentRound",
+      en: "Round",
+      ru: "Раунд"
+    },
 
     "privacy-policy": {
       selector: "#privacy-policy",

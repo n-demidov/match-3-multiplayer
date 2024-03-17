@@ -446,6 +446,23 @@ body{
   margin-top: 7px;
 }
 
+.current-round{
+  position: absolute;
+  text-align: center;
+  color: #073359;
+
+  top: 30px;
+  left: 164px;
+}
+
+.num-current-round{
+  font-size: 22px;
+}
+
+.caption-current-round{
+  font-size: 10px;
+}
+
 .time-progress-img{
   position: absolute;
   z-index: -1;
