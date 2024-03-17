@@ -107,7 +107,8 @@ public class GameRequests {
   }
 
   private boolean isTutorialGame(User user) {
-    return user.getWins() <= AppConstants.MAX_WINS_FOR_TUTORIAL_GAME;
+    return AppConstants.TUTORIAL_GAME_ENABLED &&
+        user.getWins() <= AppConstants.MAX_WINS_FOR_TUTORIAL_GAME;
   }
 
   private long extractRandomUser(List<Long> userIds) {
