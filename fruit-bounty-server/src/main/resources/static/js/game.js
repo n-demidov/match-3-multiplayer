@@ -359,11 +359,12 @@ function paintGame(game) {
     hideBoard();
     resetSelectedCells();
   }
-  paintOpponentTurnText();
+  paintWinner(game);
+
   paintPlayerChangedText();
   paintShuffleText();
   paintExtraMoveText();
-  paintWinner(game);
+  paintOpponentTurnText();
 }
 
 function paintPlayers(game) {
