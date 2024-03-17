@@ -433,7 +433,7 @@ function startSwipeCellAnimation(success, point1, point2) {
 function resetSwipeCellAnimation(success, point1, point2) {
   swipeCellAnimation.enabled = false;
   swipeCellAnimation.idxCounter = 0;
-  swipeCellAnimation.idxCounterMax = 4;
+  swipeCellAnimation.idxCounterMax = game.standardAnimationIter;
 
   swipeCellAnimation.success = success;
   swipeCellAnimation.point1 = point1;

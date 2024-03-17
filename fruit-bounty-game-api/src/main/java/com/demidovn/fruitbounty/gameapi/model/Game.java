@@ -37,6 +37,7 @@ public class Game {
   @JsonIgnore
   private int totalAnimationTimeMs;
   private int animationTimerIntervalMs;
+  private int standardAnimationIter;
 
   @JsonIgnore
   private final Queue<GameAction> gameActions = new ConcurrentLinkedQueue<>();
@@ -60,7 +61,8 @@ public class Game {
         Player.copyPlayer(fromGame.winner),
         Collections.emptyList(),
         fromGame.totalAnimationTimeMs,
-        fromGame.animationTimerIntervalMs
+        fromGame.animationTimerIntervalMs,
+        fromGame.standardAnimationIter
     );
   }
 

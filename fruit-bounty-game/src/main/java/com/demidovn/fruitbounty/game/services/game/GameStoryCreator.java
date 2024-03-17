@@ -1,5 +1,7 @@
 package com.demidovn.fruitbounty.game.services.game;
 
+import static com.demidovn.fruitbounty.game.GameOptions.STANDARD_ANIMATION_ITER;
+
 import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.GameStory;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GameStoryCreator {
-  private static final int STANDARD_ANIMATION_ITER = 4;  // todo: extract to general consts or delete
 
   private static final Map<GameStoryType, Integer> storyIdxCounterMaxs = new HashMap<>();
 

@@ -30,6 +30,7 @@ public class GameCreator {
   public Game createNewGame(List<Player> players, boolean isTutorial) {
     Game game = new Game();
     game.setAnimationTimerIntervalMs(ANIMATION_TIMER_INTERVAL_MS);
+    game.setStandardAnimationIter(GameOptions.STANDARD_ANIMATION_ITER);
     game.setTutorial(isTutorial);
 
     game.setRoundsNum(GameOptions.GAME_ROUNDS_NUM);
