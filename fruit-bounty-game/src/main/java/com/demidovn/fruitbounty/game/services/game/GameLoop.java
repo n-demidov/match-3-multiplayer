@@ -125,21 +125,26 @@ public class GameLoop {
     Player oldCurrentPlayer = game.getCurrentPlayer();
 
     currentPlayer.resetConsecutivelyMissedMoves();
+    currentPlayer.decreaseMovesInRound();
     game.getLastStories().clear();
 
     swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
     game.getLastStories().add(gameStoryCreator.create(GameStoryType.SWIPE, game.deepCopy()));
 
-    boolean wasExtraMove = false;
     int counter = 0;
     do {
+      boolean wasExtraMove = false;
+
       CleanMatchesResult matchesCountResult = cleanMatches(gameAction);
       currentPlayer.setPointsWhileGame(currentPlayer.getPointsWhileGame() + matchesCountResult.allMatchesCount);
       if (counter == 0 && matchesCountResult.wasExtraMove) {
         wasExtraMove = true;
       }
-      boolean extraMoveOnFirstIteration = wasExtraMove && counter == 0;
-      game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy(), extraMoveOnFirstIteration));
+      game.getLastStories().add(gameStoryCreator.create(GameStoryType.MATCH, game.deepCopy(), wasExtraMove));
+
+      if (wasExtraMove) {
+        currentPlayer.increaseMovesInRound();
+      }
 
       Game copiedState = game.deepCopy();
       DroppedResult droppedResult = cellsDropper.dropCells(game.getBoard().getCells());
@@ -161,9 +166,6 @@ public class GameLoop {
       game.getLastStories().add(gameStoryCreator.create(GameStoryType.RECREATE_BOARD, copiedState));
     }
 
-    if (!wasExtraMove) {
-      currentPlayer.decreaseMovesInRound();
-    }
     gameRules.switchCurrentPlayer(game);
 
     if (!oldCurrentPlayer.equals(game.getCurrentPlayer())) {

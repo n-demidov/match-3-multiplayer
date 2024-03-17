@@ -58,4 +58,8 @@ public class Player {
     movesInRound--;
   }
 
+  public void increaseMovesInRound() {
+    movesInRound++;
+  }
+
 }
