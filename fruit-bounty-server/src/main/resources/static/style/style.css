@@ -416,7 +416,25 @@ body{
 }
 
 .player-score{
-  font-size: 12px;
+  position: absolute;
+  top: 48px;
+}
+.left-pl-score{
+  left: 60px;
+}
+.right-pl-score{
+  left: 280px;
+}
+
+.player-moves{
+  position: absolute;
+  top: 48px;
+}
+.left-pl-moves{
+  left: 134px;
+}
+.right-pl-moves{
+  left: 218px;
 }
 
 .surrender-btn{
