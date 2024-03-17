@@ -19,7 +19,7 @@ public class GameOptions {
 
   public static final int CELL_TYPES_COUNT = 9;
   public static final int CELL_TYPES_MIN = 1;
-  public static final int ANIMATION_TIMER_INTERVAL_MS = 40;
+  public static final int ANIMATION_TIMER_INTERVAL_MS = 45;
   public static final int STANDARD_ANIMATION_ITER = 4;
 
   public static final String GAME_LOOP_SCHEDULE_DELAY = "30";
