@@ -352,6 +352,7 @@ function paintGame(game) {
 
   canvas.width = getCanvasWidth();
 
+  paintUi(game);
   paintPlayers(game);
   paintBoardBackground();
   paintBoardGrid(game);
@@ -367,6 +368,10 @@ function paintGame(game) {
   paintShuffleText();
   paintExtraMoveText();
   paintAnimatedText();
+}
+
+function paintUi(game) {
+  $('#numCurrentRound').text(game.currentRound);
 }
 
 function paintPlayers(game) {
@@ -400,7 +405,7 @@ function paintPlayer(player, game, playerSide) {
 
   // Other player's params
   // $('#' + playerSide + '-pl-score').text(localize("score") + ": " + player.score);
-  $('#' + playerSide + '-pl-score').text(player.pointsWhileGame + " | " + player.movesInRound + " | " + game.currentRound);
+  $('#' + playerSide + '-pl-score').text(player.pointsWhileGame + " | " + player.movesInRound);
   $('#' + playerSide + '-pl-info').attr("data-original-title", concatGameStats(player));
 
   // If game is going on
