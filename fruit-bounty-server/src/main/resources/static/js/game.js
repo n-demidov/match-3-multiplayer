@@ -12,7 +12,7 @@ var MIN_CELLS_TO_MATCH = 3;
 
 var BOUNCE_VAL = 2;
 
-var OPPONENT_TURN_ANIMATION_DURATION_MS = 1000;
+var ANIMATED_TEXT_ANIMATION_DURATION_MS = 1000;
 
 var MAX_BUSY_TYPE_ANIMATION_OPACITY = 0.6;
 var DELTA_BUSY_TYPE_OPACITY = 0.15;
@@ -106,7 +106,7 @@ function processGameStartedOperation(newGame) {
 
   resetGameInfo();
   if (isCurrentTurn(game)) {
-    resetOpponentTurnAnimation();
+    resetAnimatedText();
   }
 
   resetGameRequestUi();
@@ -267,10 +267,10 @@ function gameBoardClicked(x, y) {
   }
 
   if (!isCurrentTurn(game)) {
-    startOpponentTurnAnimation();
+    startAnimatedText(localize('opponentTurn'));
     return;
   } else {
-    resetOpponentTurnAnimation();
+    resetAnimatedText();
   }
 
   var xCellIndex = Math.floor(x / cellSize);
@@ -322,12 +322,14 @@ function resetPoint2() {
   point2 = undefined;
 }
 
-function startOpponentTurnAnimation() {
-  animation.opponentTurnStartedMs = Date.now();
+function startAnimatedText(text) {
+  animation.animatedTextValue = text;
+  animation.animatedTextStartedMs = Date.now();
 }
 
-function resetOpponentTurnAnimation() {
-  animation.opponentTurnStartedMs = undefined;
+function resetAnimatedText() {
+  animation.animatedTextStartedMs = undefined;
+  animation.animatedTextValue = undefined;
 }
 
 function sendGameAction(movePayload) {
@@ -364,7 +366,7 @@ function paintGame(game) {
   paintPlayerChangedText();
   paintShuffleText();
   paintExtraMoveText();
-  paintOpponentTurnText();
+  paintAnimatedText();
 }
 
 function paintPlayers(game) {
@@ -775,7 +777,7 @@ function paintPlayerChangedText() {
   }
 
   paintShortText(s);
-  resetOpponentTurnAnimation();
+  resetAnimatedText();
 }
 
 function paintShuffleText() {
@@ -785,7 +787,7 @@ function paintShuffleText() {
   }
 
   paintShortText(localize('noMoves'));
-  resetOpponentTurnAnimation();
+  resetAnimatedText();
 }
 
 function paintExtraMoveText() {
@@ -794,21 +796,25 @@ function paintExtraMoveText() {
     return;
   }
 
-  paintShortText(localize('extraMove'));
-  resetOpponentTurnAnimation();
+  if (!story || story.storyIdxCounter !== 0) {
+    return;
+  }
+
+  resetAnimatedText();
+  startAnimatedText(localize('extraMove'));
 }
 
-function paintOpponentTurnText() {
-  if (animation.opponentTurnStartedMs === undefined) {
+function paintAnimatedText() {
+  if (animation.animatedTextStartedMs === undefined) {
     return;
   }
 
-  if (Date.now() - animation.opponentTurnStartedMs > OPPONENT_TURN_ANIMATION_DURATION_MS) {
-    resetOpponentTurnAnimation();
+  if (Date.now() - animation.animatedTextStartedMs > ANIMATED_TEXT_ANIMATION_DURATION_MS) {
+    resetAnimatedText();
     return;
   }
 
-  paintShortText(localize('opponentTurn'));
+  paintShortText(animation.animatedTextValue);
 }
 
 function paintShortText(text) {
