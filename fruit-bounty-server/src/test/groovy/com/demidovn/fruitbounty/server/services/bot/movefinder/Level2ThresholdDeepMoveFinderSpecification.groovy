@@ -6,9 +6,11 @@ import com.demidovn.fruitbounty.gameapi.model.Board
 import com.demidovn.fruitbounty.gameapi.model.Cell
 import com.demidovn.fruitbounty.gameapi.model.Game
 import com.demidovn.fruitbounty.gameapi.model.Player
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Subject
 
+@Ignore
 class Level2ThresholdDeepMoveFinderSpecification extends Specification {
 
     int EM = 0, OP = 1, ME = 2

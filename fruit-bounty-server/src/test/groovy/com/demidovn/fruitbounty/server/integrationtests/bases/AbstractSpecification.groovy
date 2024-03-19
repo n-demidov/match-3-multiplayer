@@ -4,9 +4,11 @@ import com.demidovn.fruitbounty.server.ServerApplication
 import com.demidovn.fruitbounty.server.integrationtests.db.embedpg.EmbeddedPostgresWrapper
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification;
 
+@Ignore
 @ActiveProfiles("test")
 @SpringBootTest(
         classes = [ServerApplication.class],

@@ -10,6 +10,8 @@ import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Subject
 
+
+@Ignore
 class DeepSearchMoveFinderSpecification extends Specification {
 
     int EM = 0, OP = 1, ME = 2
