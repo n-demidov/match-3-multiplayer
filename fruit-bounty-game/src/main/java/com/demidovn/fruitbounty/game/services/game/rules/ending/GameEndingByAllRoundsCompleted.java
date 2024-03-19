@@ -2,7 +2,6 @@ package com.demidovn.fruitbounty.game.services.game.rules.ending;
 
 import com.demidovn.fruitbounty.gameapi.model.Game;
 import com.demidovn.fruitbounty.gameapi.model.Player;
-import com.sun.istack.internal.Nullable;
 import java.util.List;
 
 public class GameEndingByAllRoundsCompleted extends GameEnding {
@@ -13,7 +12,7 @@ public class GameEndingByAllRoundsCompleted extends GameEnding {
     finishGame(game, winner);
   }
 
-  @Nullable
+//  @Nullable
   private Player findWinner(List<Player> players) {
     if (players.size() > 2) {
       throw new UnsupportedOperationException("Now there is supporting only of 2 players!");
