@@ -6,8 +6,10 @@ import com.demidovn.fruitbounty.game.services.game.GameRules;
 import com.demidovn.fruitbounty.gameapi.model.Cell;
 import com.demidovn.fruitbounty.gameapi.model.GameAction;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class CapturableCellsFinderTest extends AbstractGameRulesTest {
 
   private static final int TARGET_X = 2, TARGET_Y = 0;

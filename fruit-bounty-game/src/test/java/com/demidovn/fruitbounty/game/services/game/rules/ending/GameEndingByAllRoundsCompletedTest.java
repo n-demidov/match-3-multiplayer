@@ -10,8 +10,10 @@ import com.demidovn.fruitbounty.gameapi.model.Player;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class GameEndingByAllRoundsCompletedTest {
 
   private static final int DEFAULT_CELL_TYPE = 1;

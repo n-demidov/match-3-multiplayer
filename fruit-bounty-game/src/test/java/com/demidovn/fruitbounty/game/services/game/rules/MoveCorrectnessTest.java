@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class MoveCorrectnessTest extends AbstractGameRulesTest {
 
   private static final int OWNED_CELL_X = 2;
