@@ -81,7 +81,13 @@ function initGameUi() {
   canvas = document.getElementById(CANVAS_ID);
   ctx = canvas.getContext(CANVAS_CONTEXT);
 
-  $("#" + CANVAS_ID).on("mousedown", canvasClicked);
+  if (isMobile) {
+    $("#" + CANVAS_ID).on("touchstart ", canvasTouchStarted);
+    $("#" + CANVAS_ID).on("touchend ", canvasTouchEnded);
+  } else {
+    $("#" + CANVAS_ID).on("mousedown", canvasClicked);
+  }
+
   $('#player-surrender').on("click", surrenderClicked);
   $('#subwindow-close').on("click", onSubwindowClose);
   $('#subwindow-btn-next').on("click", onSubwindowClose);
@@ -251,16 +257,36 @@ function killGameTimer() {
 }
 
 function canvasClicked(e) {
+  console.log('++++++++++++++++++++++ Clicked');
+
   var x = e.offsetX;
   var y = e.offsetY;
 
-  if (x >= BOARD_X && x < BOARD_X + boardWidth &&
-      y >= BOARD_Y && y < BOARD_Y + boardHeight) {
-    gameBoardClicked(x, y);
-  }
+  gameBoardClicked(x, y);
+}
+
+function canvasTouchStarted(e) {
+  console.log('++++++++++++++++++++++ TouchStarted');
+
+  var x = e.originalEvent.changedTouches[0].clientX - $("#" + CANVAS_ID).offset().left;
+  var y = e.originalEvent.changedTouches[0].clientY - $("#" + CANVAS_ID).offset().top;
+
+  gameBoardClicked(x, y);
+}
+
+function canvasTouchEnded(e) {
+  var x = e.originalEvent.changedTouches[0].clientX - $("#" + CANVAS_ID).offset().left;
+  var y = e.originalEvent.changedTouches[0].clientY - $("#" + CANVAS_ID).offset().top;
+
+  gameBoardClicked(x, y);
 }
 
 function gameBoardClicked(x, y) {
+  if (!(x >= BOARD_X && x < BOARD_X + boardWidth &&
+      y >= BOARD_Y && y < BOARD_Y + boardHeight)) {
+    return;
+  }
+
   var game = getActualGame();
   if (game.finished) {
     return;

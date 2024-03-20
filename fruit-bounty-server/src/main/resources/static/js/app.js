@@ -31,6 +31,7 @@ var chatScrolling = $('#chat-output-scrolling');
 var chatMsg = $("#chat-msg-input");
 
 var queryParams;
+var isMobile = true;
 var isAuthed = false;
 var fbLoginStatus;
 var stompClient = null;
