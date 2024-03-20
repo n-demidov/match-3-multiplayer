@@ -25,6 +25,7 @@ var CAPTURING_CELL_ANIMATION_MIN = CAPTURING_CELL_ANIMATION_DELTA;
 var DEFEAT_OR_DRAW_ADDS_CHANCE = 1;
 
 var point1, point2;
+var screenTouchWorking = false;
 
 var fontsByLocale = {
   "en": '"Showcard Gothic"',
@@ -81,12 +82,9 @@ function initGameUi() {
   canvas = document.getElementById(CANVAS_ID);
   ctx = canvas.getContext(CANVAS_CONTEXT);
 
-  if (isMobile) {
-    $("#" + CANVAS_ID).on("touchstart ", canvasTouchStarted);
-    $("#" + CANVAS_ID).on("touchend ", canvasTouchEnded);
-  } else {
-    $("#" + CANVAS_ID).on("mousedown", canvasClicked);
-  }
+  $("#" + CANVAS_ID).on("touchstart ", canvasTouchStarted);
+  $("#" + CANVAS_ID).on("touchend ", canvasTouchEnded);
+  $("#" + CANVAS_ID).on("mousedown", canvasClicked);
 
   $('#player-surrender').on("click", surrenderClicked);
   $('#subwindow-close').on("click", onSubwindowClose);
@@ -257,7 +255,9 @@ function killGameTimer() {
 }
 
 function canvasClicked(e) {
-  console.log('++++++++++++++++++++++ Clicked');
+  if (screenTouchWorking) {
+    return;
+  }
 
   var x = e.offsetX;
   var y = e.offsetY;
@@ -266,7 +266,7 @@ function canvasClicked(e) {
 }
 
 function canvasTouchStarted(e) {
-  console.log('++++++++++++++++++++++ TouchStarted');
+  screenTouchWorking = true;
 
   var x = e.originalEvent.changedTouches[0].clientX - $("#" + CANVAS_ID).offset().left;
   var y = e.originalEvent.changedTouches[0].clientY - $("#" + CANVAS_ID).offset().top;
@@ -275,6 +275,8 @@ function canvasTouchStarted(e) {
 }
 
 function canvasTouchEnded(e) {
+  screenTouchWorking = true;
+
   var x = e.originalEvent.changedTouches[0].clientX - $("#" + CANVAS_ID).offset().left;
   var y = e.originalEvent.changedTouches[0].clientY - $("#" + CANVAS_ID).offset().top;
 
