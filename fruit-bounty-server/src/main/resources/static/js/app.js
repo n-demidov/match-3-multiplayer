@@ -10,6 +10,7 @@ var VK_IFRAME_WINDOW_NAME = "fXD";
 
 var ARROW_HELPER_TIMER_INTERVAL = 40;
 var TIPS_TIMER_INTERVAL = 12500;
+var VK_HIDE_PANEL_MS = 10000;
 
 var ENTER_KEY_CODE = 13;
 var C_KEY_CODE = 67;
@@ -301,6 +302,7 @@ function wrapSpan(text) {
 
 function initUi() {
   console.log("initUi");
+
   window.scroll(0, 0);
   chatMsg.focus();
   $("#chat-msg-input").attr('placeholder', localize('chat'));
@@ -601,7 +603,18 @@ function startVkSdk() {
 
   console.log('Loading vk bridge...');
   window.vkBridge.send('VKWebAppInit', {});
+  console.log('Load vk bridge');
+
   onSocialNetworkAuthed();
+
+  // Hide banner for vk.
+  if (getState() === VK_TYPE) {
+    // setTimeout(vkHidePanel, VK_HIDE_PANEL_MS);
+  }
+}
+
+function vkHidePanel() {
+  $(".AppSplashScreen").remove();
 }
 
 function initVk() {
