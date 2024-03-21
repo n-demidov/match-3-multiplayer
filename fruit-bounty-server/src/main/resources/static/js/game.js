@@ -32,6 +32,7 @@ var fontsByLocale = {
   "ru": '"Showcard gothic cyrillic"'
 }
 var FRUIT_IMG_SIZE = 50;
+var FRUIT_IMG_MARGIN = 5;
 var FRUIT_IMG_NUM = 9;
 var CAPTURED_OPACITY_CELL = 0.25;
 var cellSize;
@@ -643,7 +644,7 @@ function drawFruit(cell, game) {
   ctx.drawImage(
     fruitsImage[getFruitImageIdx(cell)],
     0, 0, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
-    x, y, cellSize, cellSize);
+    x + FRUIT_IMG_MARGIN, y + FRUIT_IMG_MARGIN, cellSize - FRUIT_IMG_MARGIN * 2, cellSize - FRUIT_IMG_MARGIN * 2);
 }
 
 function updateBounceIdx(bounceIdx) {
