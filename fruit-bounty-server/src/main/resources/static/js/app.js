@@ -600,7 +600,7 @@ function startVkSdk() {
   }
 
   console.log('Loading vk bridge...');
-  window.vkBridge.send('VKWebAppInit');
+  window.vkBridge.send('VKWebAppInit', {});
 }
 
 function initVk() {

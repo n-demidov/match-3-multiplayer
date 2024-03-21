@@ -34,6 +34,9 @@ public class HttpMainController {
     @Value("${game-server.facebook.application-id}")
     private String FACEBOOK_APP_ID;
 
+    @Value("${game-server.vk.application-id}")
+    private String VK_APP_ID;
+
     @RequestMapping(value = FB_APP_URL, method = RequestMethod.GET)
     public String facebookAppGet(Map<String, Object> model) {
         statService.incCounter(MetricsConsts.REQUEST.ALL_STAT);
@@ -85,6 +88,8 @@ public class HttpMainController {
 
     private String getVkApp(Map<String, Object> model) {
         model.put(SOCIAL_NETWORK_TYPE_PARAM, VK_SOCIAL_NETWORK_TYPE);
+        model.put(SOCIAL_NETWORK_APP_ID_PARAM, VK_APP_ID);
+
         return APP_HTML_VIEW;
     }
 
