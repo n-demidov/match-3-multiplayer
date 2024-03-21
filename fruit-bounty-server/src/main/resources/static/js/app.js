@@ -590,17 +590,18 @@ function fbStatusChanged(logStatus) {
 
 /* === VK Methods === */
 function startVkSdk() {
-  if (isMobileVk) {
-    // window.name = VK_IFRAME_WINDOW_NAME;
-    console.log('loading mobile vk SDK...');
-    loadScript(VK_MOBILE_SDK_URL, initVk);
-  } else {
-    console.log('loading vk SDK...');
-    loadScript(VK_SDK_URL, initVk);
-  }
+  // if (isMobileVk) {
+  //   // window.name = VK_IFRAME_WINDOW_NAME;
+  //   console.log('loading mobile vk SDK...');
+  //   loadScript(VK_MOBILE_SDK_URL, initVk);
+  // } else {
+  //   console.log('loading vk SDK...');
+  //   loadScript(VK_SDK_URL, initVk);
+  // }
 
   console.log('Loading vk bridge...');
   window.vkBridge.send('VKWebAppInit', {});
+  onSocialNetworkAuthed();
 }
 
 function initVk() {
