@@ -31,19 +31,9 @@ var fontsByLocale = {
   "en": '"Showcard Gothic"',
   "ru": '"Showcard gothic cyrillic"'
 }
-var imageCoordinates = {
-  1: {"x": 0, "y": 0},
-  2: {"x": 38, "y": 0},
-  3: {"x": 76, "y": 0},
-  4: {"x": 0, "y": 38},
-  5: {"x": 38, "y": 38},
-  6: {"x": 76, "y": 38},
-  7: {"x": 0, "y": 76},
-  8: {"x": 38, "y": 76},
-  9: {"x": 76, "y": 76}
-};
+var FRUIT_IMG_SIZE = 50;
+var FRUIT_IMG_NUM = 9;
 var CAPTURED_OPACITY_CELL = 0.25;
-var FRUIT_IMG_SIZE = 38;
 var cellSize;
 
 var BOARD_X = 0;
@@ -52,7 +42,7 @@ var boardWidth;
 var boardHeight;
 
 var imgGameScreen = new Image();
-var fruitsImage = new Image();
+var fruitsImage = [];
 var handImage = new Image();
 var arrowHelperImage = new Image();
 var imgWarning = new Image();
@@ -154,7 +144,11 @@ function resetGameInfo() {
 }
 
 function preloadGameSecondImages() {
-  fruitsImage.src = IMG_PREFIX + "/img/fruits.png";
+  for (var i = 1; i <= FRUIT_IMG_NUM; i++) {
+    fruitsImage[i] = new Image();
+    fruitsImage[i].src = IMG_PREFIX + "/img/fruits/" + i + ".png";
+  }
+
   handImage.src = IMG_PREFIX + "/img/hand.png";
   arrowHelperImage.src = IMG_PREFIX + "/img/arrow_helper.png";
   imgGameScreen.src = IMG_PREFIX + '/img/components/game-background.png';
@@ -165,6 +159,10 @@ function preloadGameSecondImages() {
   imgBtnNext.src = IMG_PREFIX + '/img/components/button_next.' + browserLocale + '.png';
   imgSurrender.src = IMG_PREFIX + '/img/components/surrender.' + browserLocale + '.png';
   imgUnknownUser.src = IMG_PREFIX + '/img/components/unknown_user.png';
+}
+
+function getFruitImageIdx(cell) {
+  return cell.type;
 }
 
 function setImagesOnTags() {
@@ -584,8 +582,6 @@ function foundCell(cell, cells) {
 }
 
 function drawFruit(cell, game) {
-  var fruitImgCoords = getImageCoordinates(cell);
-
   var initY = cell.y * cellSize + BOARD_Y;
   var x = cell.x * cellSize;
   var y = initY;
@@ -645,8 +641,8 @@ function drawFruit(cell, game) {
   }
 
   ctx.drawImage(
-    fruitsImage,
-    fruitImgCoords.x, fruitImgCoords.y, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
+    fruitsImage[getFruitImageIdx(cell)],
+    0, 0, FRUIT_IMG_SIZE, FRUIT_IMG_SIZE,
     x, y, cellSize, cellSize);
 }
 
@@ -736,10 +732,6 @@ function paintBoardGrid(game) {
 
 function hideBoard() {
   darkenCells([], false, 0.2);
-}
-
-function getImageCoordinates(cell) {
-  return imageCoordinates[cell.type];
 }
 
 function paintWinner(game) {
