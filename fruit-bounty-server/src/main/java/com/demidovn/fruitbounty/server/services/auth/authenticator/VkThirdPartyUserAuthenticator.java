@@ -40,6 +40,9 @@ public class VkThirdPartyUserAuthenticator implements ThirdPartyUserAuthenticato
   @Value("${game-server.vk.secret-key}")
   private String VK_APP_SECRET_KEY;
 
+  @Value("${game-server.vk.valid:false}")
+  private boolean VALID_VK;
+
   @Override
   public AuthType getAuthType() {
     return AuthType.VK;
@@ -55,7 +58,7 @@ public class VkThirdPartyUserAuthenticator implements ThirdPartyUserAuthenticato
 
     log.trace("vkResponse={}", vkResponse);
 
-    if (!isValidAuthKey(authOperation.getAuthKey(), authOperation.getUserId())) {
+    if (VALID_VK && !isValidAuthKey(authOperation.getAuthKey(), authOperation.getUserId())) {
       log.debug("client's authKey not valid, authOperation={}", authOperation);
       throw new AuthFailedException();
     }

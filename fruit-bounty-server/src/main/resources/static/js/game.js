@@ -22,7 +22,7 @@ var busyTypeAnimationTempVarDirect;
 var CAPTURING_CELL_ANIMATION_DELTA = 0.2;
 var CAPTURING_CELL_ANIMATION_MIN = CAPTURING_CELL_ANIMATION_DELTA;
 
-var DEFEAT_OR_DRAW_ADDS_CHANCE = 1;
+var DEFEAT_OR_DRAW_ADDS_CHANCE = 20;
 
 var point1, point2;
 var screenTouchWorking = false;
