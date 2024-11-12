@@ -17,27 +17,31 @@ public class ScoreAddedScoreCalculatorTest extends TestCase {
     int actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
     assertThat(actual).isEqualTo(1);
 
-    winner = createPlayer(19);
+    winner = createPlayer(17);
     actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
     assertThat(actual).isEqualTo(1);
 
-    winner = createPlayer(20);
+    winner = createPlayer(27);
+    actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
+    assertThat(actual).isEqualTo(1);
+
+    winner = createPlayer(28);
     actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
     assertThat(actual).isEqualTo(2);
 
-    winner = createPlayer(39);
+    winner = createPlayer(37);
     actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
     assertThat(actual).isEqualTo(2);
 
-    winner = createPlayer(40);
+    winner = createPlayer(38);
     actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
     assertThat(actual).isEqualTo(3);
 
-    winner = createPlayer(59);
+    winner = createPlayer(47);
     actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
     assertThat(actual).isEqualTo(3);
 
-    winner = createPlayer(60);
+    winner = createPlayer(48);
     actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
     assertThat(actual).isEqualTo(4);
   }
