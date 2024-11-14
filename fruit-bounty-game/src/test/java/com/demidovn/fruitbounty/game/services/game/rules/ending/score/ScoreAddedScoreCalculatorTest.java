@@ -44,6 +44,18 @@ public class ScoreAddedScoreCalculatorTest extends TestCase {
     winner = createPlayer(48);
     actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
     assertThat(actual).isEqualTo(4);
+
+    winner = createPlayer(57);
+    actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
+    assertThat(actual).isEqualTo(4);
+
+    winner = createPlayer(58);
+    actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
+    assertThat(actual).isEqualTo(5);
+
+    winner = createPlayer(158);
+    actual = scoreAddedScoreCalculator.findWinnerAddedScore(winner, looser);
+    assertThat(actual).isEqualTo(15);
   }
 
   private Player createPlayer(int pointsWhileGame) {
