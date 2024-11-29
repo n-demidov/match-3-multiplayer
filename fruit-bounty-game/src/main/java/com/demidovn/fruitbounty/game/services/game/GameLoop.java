@@ -75,8 +75,8 @@ public class GameLoop {
 
     if (gameAction.getType() == GameActionType.Move) {
       processMoveAction(gameAction, context);
-//    } else if (gameAction.getType() == GameActionType.Surrender) {
-//      processSurrenderAction(gameAction, context);
+    } else if (gameAction.getType() == GameActionType.Surrender) {
+      processSurrenderAction(gameAction, context);
     } else {
       throw new IllegalArgumentException(String.format(
           "Unknown gameActionType=%s", gameAction.getType()));
@@ -177,6 +177,25 @@ public class GameLoop {
     game.updateMoveStartedTimes();
 
     context.markGameChanged();
+  }
+
+  private void processSurrenderAction(GameAction gameAction, GameProcessingContext context) {
+    Game game = gameAction.getGame();
+
+    playerSurrendered(gameAction.findActionedPlayer(), game);
+    game.getLastStories().clear();
+
+    context.markGameChanged();
+  }
+
+  private void playerSurrendered(Player player, Game game) {
+    player.setSurrendered(true);
+
+    gameRules.checkGameEndingBySurrendering(game);
+
+    if (player.equals(game.getCurrentPlayer())) {
+      gameRules.switchCurrentPlayer(game);
+    }
   }
 
   private CleanMatchesResult cleanMatches(GameAction gameAction) {
