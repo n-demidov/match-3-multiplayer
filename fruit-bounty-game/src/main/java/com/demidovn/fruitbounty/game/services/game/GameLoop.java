@@ -126,7 +126,7 @@ public class GameLoop {
 
     currentPlayer.resetConsecutivelyMissedMoves();
     currentPlayer.decreaseMovesInRound();
-    game.getLastStories().clear();
+    resetAnimationHistory(game);
 
     swiper.swipe(game.getBoard().getCells(), gameAction.getPoint1(), gameAction.getPoint2());
     game.getLastStories().add(gameStoryCreator.create(GameStoryType.SWIPE, game.deepCopy()));
@@ -182,8 +182,8 @@ public class GameLoop {
   private void processSurrenderAction(GameAction gameAction, GameProcessingContext context) {
     Game game = gameAction.getGame();
 
+    resetAnimationHistory(game);
     playerSurrendered(gameAction.findActionedPlayer(), game);
-    game.getLastStories().clear();
 
     context.markGameChanged();
   }
@@ -230,6 +230,7 @@ public class GameLoop {
     }
 
     if (isCurrentMoveExpired(game)) {
+      resetAnimationHistory(game);
       Player currentPlayer = game.getCurrentPlayer();
 
       currentPlayer.setMovesInRound(0);
@@ -244,6 +245,10 @@ public class GameLoop {
   private boolean isCurrentMoveExpired(Game game) {
     return
       game.getCurrentMoveStarted() + game.getTimePerMoveMs() < Instant.now().toEpochMilli();
+  }
+
+  private void resetAnimationHistory(Game game) {
+    game.getLastStories().clear();
   }
 
   private void notifyIfGameChanged(Game game, GameProcessingContext processContext) {
