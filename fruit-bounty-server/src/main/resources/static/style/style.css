@@ -445,14 +445,14 @@ body{
 .player-surrender{
   position: absolute;
 
-  top: 12px;
-  left: 152px;
+  top: 10px;
+  left: 153px;
 }
 
 .player-surrender-img{
-  max-width: 54px;
+  max-width: 52px;
   max-height: 42px;
-  min-width: 54px;
+  min-width: 52px;
   min-height: 42px;
 }
 
@@ -468,13 +468,12 @@ body{
   position: absolute;
   text-align: center;
   color: #073359;
-
-  top: 30px;
+  top: 40px;
   left: 164px;
 }
 
 .num-current-round{
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .caption-current-round{
