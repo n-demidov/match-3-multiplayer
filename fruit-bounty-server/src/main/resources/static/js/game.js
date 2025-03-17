@@ -22,7 +22,7 @@ var busyTypeAnimationTempVarDirect;
 var CAPTURING_CELL_ANIMATION_DELTA = 0.2;
 var CAPTURING_CELL_ANIMATION_MIN = CAPTURING_CELL_ANIMATION_DELTA;
 
-var DEFEAT_OR_DRAW_ADDS_CHANCE = 20;
+var WIN_OR_DRAW_ADDS_CHANCE = 50;
 
 var point1, point2;
 var screenTouchWorking = false;
@@ -226,7 +226,7 @@ function onSubwindowClose(e) {
   if (isDefeat) {
     showAdds();
   } else {
-    showAdds(DEFEAT_OR_DRAW_ADDS_CHANCE);
+    showAdds(WIN_OR_DRAW_ADDS_CHANCE);
   }
 
   $(".background").css("background-image", "url(" + imgLobbyScreen.src + ")");
